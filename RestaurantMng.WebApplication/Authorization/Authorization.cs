@@ -7,7 +7,7 @@ namespace RestaurantMng.WebApplication.Authorization
 {
     public class AuthorizationAttribute : AuthorizeAttribute
     {
-        public string Role { set; get; }
+        public string Role {set; get; }
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             var infoSession = (LoginDto)HttpContext.Current.Session[ConstCommon.USER_SESSION];

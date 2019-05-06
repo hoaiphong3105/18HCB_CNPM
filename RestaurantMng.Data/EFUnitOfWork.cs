@@ -1,4 +1,4 @@
-﻿using RestaurantMng.Core.Interfaces;
+﻿using RestaurantMng.Data.Interfaces;
 
 namespace RestaurantMng.Data
 {

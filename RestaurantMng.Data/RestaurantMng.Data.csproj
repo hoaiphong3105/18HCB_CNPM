@@ -53,6 +53,8 @@
     <Compile Include="AppDbContext.cs" />
     <Compile Include="EFRepository.cs" />
     <Compile Include="EFUnitOfWork.cs" />
+    <Compile Include="Interfaces\IRepository.cs" />
+    <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Models\GroupUser.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

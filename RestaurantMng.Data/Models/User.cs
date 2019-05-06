@@ -20,7 +20,9 @@ namespace RestaurantMng.Data.Models
         public string Password { get; set; }
         public string Address { get; set; }
         public Nullable<int> GroupID { get; set; }
-        public Nullable<bool> IsActive { get; set; }
+        public bool IsActive { get; set; }
+        public string DateOfBirth { get; set; }
+        public string Phone { get; set; }
     
         public virtual GroupUser GroupUser { get; set; }
     }

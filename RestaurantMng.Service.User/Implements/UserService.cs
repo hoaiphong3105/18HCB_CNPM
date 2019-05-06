@@ -1,12 +1,10 @@
-﻿using RestaurantMng.Core.Interfaces;
+﻿using RestaurantMng.Data.Interfaces;
 using RestaurantMng.Service.User.Interfaces;
-using RestaurantMng.Data.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using RestaurantMng.Service.User.Models.Dtos;
+using RestaurantMng.Service.User.Models.ViewModels;
+using RestaurantMng.Core.Common;
+using System.Configuration;
 
 namespace RestaurantMng.Service.User.Implements
 {
@@ -33,19 +31,100 @@ namespace RestaurantMng.Service.User.Implements
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public LoginDto CheckLogin(string username, string password)
+        public ResultModel CheckLogin(string username, string password)
         {
-            var result = new LoginDto();
-            var data = _userRepository.FindSingle(x => x.UserName.Equals(username)
-                        && x.Password.Equals(password) && x.IsActive == true);
-            if (data != null)
+            var result = new ResultModel();
+            try
             {
-                result.UserID = data.ID;
-                result.IsLoginSuccess = true;
-                result.Role = data.GroupUser.GroupName;
-                result.UserName = data.UserName;
+                var data = _userRepository.FindSingle(x => x.UserName.Equals(username)
+                            && x.Password.Equals(password) && x.IsActive == true);
+                if (data != null)
+                {
+                    var infoLogin = new LoginDto();
+                    infoLogin.UserID = data.ID;
+                    infoLogin.Role = data.GroupUser.GroupName;
+                    infoLogin.UserName = data.UserName;
+
+                    result.Data = infoLogin;
+                }
+                else
+                {
+                    result.Code = -1;
+                    result.Message = "Đăng nhập thất bại";
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Đăng nhập thất bại";
             }
             return result;
+        }
+
+        /// <summary>
+        /// Kiểm tra account đã tồn tại
+        /// Dùng khi tạo mới nhân viên
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public ResultModel CheckUserExist(string username)
+        {
+            var result = new ResultModel();
+
+            try
+            {
+                bool isExist = _userRepository.FindSingle(x => x.UserName.Equals(username)) != null;
+                if (isExist)
+                {
+                    result.Code = -1;
+                    result.Message = "Tài khoản đã tồn tại";
+                }
+            }
+            catch(Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Tài khoản đã tồn tại";
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Thêm mới nhân viên 
+        /// </summary>
+        /// <param name="userVM"></param>
+        /// <returns></returns>
+        public ResultModel CreateUser(UserViewModel userVM)
+        {
+            var result = new ResultModel();
+            try
+            {
+                var user = new Data.Models.User();
+                user.FullName = userVM.FullName;
+                user.UserName = userVM.UserName;
+                user.Address = userVM.Address;
+                user.DateOfBirth = userVM.DateOfBirth;
+                user.Phone = userVM.Phone;
+                user.GroupID = userVM.GroupID;
+                user.Password = Encryption.HashMD5(ConfigurationManager.AppSettings["DefaultPassword"], userVM.UserName);
+                user.IsActive = true;
+
+                _userRepository.Add(user);
+                _unitOfWork.Commit();
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Thêm nhân viên thất bại!";
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Save
+        /// </summary>
+        public void Save()
+        {
+            _unitOfWork.Commit();
         }
     }
 }

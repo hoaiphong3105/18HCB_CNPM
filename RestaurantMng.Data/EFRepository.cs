@@ -1,4 +1,4 @@
-﻿using RestaurantMng.Core.Interfaces;
+﻿using RestaurantMng.Data.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;

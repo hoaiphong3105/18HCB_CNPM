@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace RestaurantMng.Core.Interfaces
+namespace RestaurantMng.Data.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {

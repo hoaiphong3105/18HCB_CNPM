@@ -12,7 +12,7 @@ namespace RestaurantMng.Core.Common
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public static string Base64Encode(string text)
+        private static string Base64Encode(string text)
         {
             var plainTextBytes = Encoding.UTF8.GetBytes(text);
             return Convert.ToBase64String(plainTextBytes);
@@ -23,7 +23,7 @@ namespace RestaurantMng.Core.Common
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static string CreateMD5(string input)
+        private static string CreateMD5(string input)
         {
             // Use input string to calculate MD5 hash
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())

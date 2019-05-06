@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace RestaurantMng.Core.Interfaces
+namespace RestaurantMng.Data.Interfaces
 {
     public interface IRepository<T, K> where T : class
     {

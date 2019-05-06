@@ -52,8 +52,6 @@
     <Compile Include="Dtos\PagedResult.cs" />
     <Compile Include="Dtos\PagedResultBase.cs" />
     <Compile Include="Common\Encryption.cs" />
-    <Compile Include="Interfaces\IRepository.cs" />
-    <Compile Include="Interfaces\IUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,15 +1,8 @@
-﻿using System.Data.Entity;
+﻿using RestaurantMng.Data.Models;
 
 namespace RestaurantMng.Data
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : RestaurantManagementEntities
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dbName"></param>
-        public AppDbContext() : base("RestaurantManagementEntities")
-        {
-        }
     }
 }
