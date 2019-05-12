@@ -5,6 +5,8 @@ using RestaurantMng.Service.User.Models.Dtos;
 using RestaurantMng.Service.User.Models.ViewModels;
 using RestaurantMng.Core.Common;
 using System.Configuration;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RestaurantMng.Service.User.Implements
 {
@@ -26,14 +28,46 @@ namespace RestaurantMng.Service.User.Implements
         }
 
         /// <summary>
+        /// Thay đổi mật khẩu
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        public ResultModel<NullModel> ChangePassword(int id, string password)
+        {
+            var result = new ResultModel<NullModel>();
+            try
+            {
+                var userEntity = _userRepository.FindById(id);
+                if (userEntity == null)
+                {
+                    result.Code = -1;
+                    result.Message = "Nhân viên không tồn tại!";
+                }
+                else
+                {
+                    userEntity.Password = password;
+                    _userRepository.Update(userEntity);
+                    _unitOfWork.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Thay đổi mật khẩu thất bại";
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Login
         /// </summary>
         /// <param name="username"></param>
         /// <param name="password"></param>
         /// <returns></returns>
-        public ResultModel CheckLogin(string username, string password)
+        public ResultModel<LoginDto> CheckLogin(string username, string password)
         {
-            var result = new ResultModel();
+            var result = new ResultModel<LoginDto>();
             try
             {
                 var data = _userRepository.FindSingle(x => x.UserName.Equals(username)
@@ -67,9 +101,9 @@ namespace RestaurantMng.Service.User.Implements
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        public ResultModel CheckUserExist(string username)
+        public ResultModel<NullModel> CheckUserExist(string username)
         {
-            var result = new ResultModel();
+            var result = new ResultModel<NullModel>();
 
             try
             {
@@ -80,7 +114,7 @@ namespace RestaurantMng.Service.User.Implements
                     result.Message = "Tài khoản đã tồn tại";
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.Code = -2;
                 result.Message = "Tài khoản đã tồn tại";
@@ -93,29 +127,105 @@ namespace RestaurantMng.Service.User.Implements
         /// </summary>
         /// <param name="userVM"></param>
         /// <returns></returns>
-        public ResultModel CreateUser(UserViewModel userVM)
+        public ResultModel<int> CreateUser(UserViewModel userVM)
         {
-            var result = new ResultModel();
+            var result = new ResultModel<int>();
             try
             {
-                var user = new Data.Models.User();
-                user.FullName = userVM.FullName;
-                user.UserName = userVM.UserName;
-                user.Address = userVM.Address;
-                user.DateOfBirth = userVM.DateOfBirth;
-                user.Phone = userVM.Phone;
-                user.GroupID = userVM.GroupID;
-                user.Password = Encryption.HashMD5(ConfigurationManager.AppSettings["DefaultPassword"], userVM.UserName);
-                user.IsActive = true;
+                var checkUser = CheckUserExist(userVM.UserName);
+                if (checkUser.Code == 1)
+                {
+                    result.Code = checkUser.Code;
+                    result.Message = checkUser.Message;
+                }
+                else
+                {
+                    var user = new Data.Models.User();
+                    user.FullName = userVM.FullName;
+                    user.UserName = userVM.UserName;
+                    user.Address = userVM.Address;
+                    user.DateOfBirth = userVM.DateOfBirth;
+                    user.Phone = userVM.Phone;
+                    user.GroupID = userVM.GroupID;
+                    user.Password = Encryption.HashMD5(ConfigurationManager.AppSettings["DefaultPassword"], userVM.UserName);
+                    user.IsActive = true;
 
-                _userRepository.Add(user);
-                _unitOfWork.Commit();
+                    _userRepository.Add(user);
+                    _unitOfWork.Commit();
+
+                    result.Data = user.ID;
+                }
             }
             catch (Exception ex)
             {
                 result.Code = -2;
                 result.Message = "Thêm nhân viên thất bại!";
             }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ResultModel<List<UserViewModel>> GetAllUser()
+        {
+            var result = new ResultModel<List<UserViewModel>>();
+            try
+            {
+                var data = _userRepository.FindAll(x => x.IsActive == false)
+                    .Select(x => new UserViewModel()
+                    {
+                        Id = x.ID,
+                        Address = x.Address,
+                        DateOfBirth = x.DateOfBirth,
+                        FullName = x.FullName,
+                        GroupID = x.GroupID ?? 0,
+                        Password = "",
+                        GroupName = x.GroupUser.GroupName,
+                        Phone = x.Phone,
+                        UserName = x.UserName,
+                    }).ToList();
+                result.Data = data;
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Thất bại";
+            }
+
+            return result;
+        } 
+
+        /// <summary>
+        /// Xóa user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ResultModel<NullModel> RemoveUser(int id)
+        {
+            var result = new ResultModel<NullModel>();
+            try
+            {
+                var userEntity = _userRepository.FindById(id);
+                if (userEntity == null)
+                {
+                    result.Code = -1;
+                    result.Message = "Nhân viên không tồn tại";
+                }
+                else
+                {
+                    userEntity.IsActive = false;
+                    _userRepository.Update(userEntity);
+                    _unitOfWork.Commit();
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Xóa nhân viên thất bại!";
+            }
+
             return result;
         }
 

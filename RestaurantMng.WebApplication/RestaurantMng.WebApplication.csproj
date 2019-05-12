@@ -266,9 +266,9 @@
       <Project>{208d0a6c-11dc-464b-8b67-22a4455e4302}</Project>
       <Name>RestaurantMng.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RestaurantMng.Service.User\RestaurantMng.Service.User.csproj">
+    <ProjectReference Include="..\RestaurantMng.Service.User\RestaurantMng.Service.csproj">
       <Project>{634d7f07-2609-4fcb-ac7e-bd37a2e8ab85}</Project>
-      <Name>RestaurantMng.Service.User</Name>
+      <Name>RestaurantMng.Service</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
