@@ -71,7 +71,7 @@ namespace RestaurantMng.Service.User.Implements
             try
             {
                 var data = _userRepository.FindSingle(x => x.UserName.Equals(username)
-                            && x.Password.Equals(password) && x.IsActive == true);
+                            && x.Password.Equals(password) && x.Status == true);
                 if (data != null)
                 {
                     var infoLogin = new LoginDto();
@@ -148,7 +148,7 @@ namespace RestaurantMng.Service.User.Implements
                     user.Phone = userVM.Phone;
                     user.GroupID = userVM.GroupID;
                     user.Password = Encryption.HashMD5(ConfigurationManager.AppSettings["DefaultPassword"], userVM.UserName);
-                    user.IsActive = true;
+                    user.Status = true;
 
                     _userRepository.Add(user);
                     _unitOfWork.Commit();
@@ -173,7 +173,7 @@ namespace RestaurantMng.Service.User.Implements
             var result = new ResultModel<List<UserViewModel>>();
             try
             {
-                var data = _userRepository.FindAll(x => x.IsActive == false)
+                var data = _userRepository.FindAll(x => x.Status == false)
                     .Select(x => new UserViewModel()
                     {
                         Id = x.ID,
@@ -215,7 +215,7 @@ namespace RestaurantMng.Service.User.Implements
                 }
                 else
                 {
-                    userEntity.IsActive = false;
+                    userEntity.Status = false;
                     _userRepository.Update(userEntity);
                     _unitOfWork.Commit();
                 }

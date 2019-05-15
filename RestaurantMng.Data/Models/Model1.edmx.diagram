@@ -9,6 +9,21 @@
         <EntityTypeShape EntityType="RestaurantManagementModel.User" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="RestaurantManagementModel.sysdiagram" Width="1.5" PointX="0.75" PointY="4.75" />
         <AssociationConnector Association="RestaurantManagementModel.FK_User_GroupUser" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.FoodResource" Width="1.5" PointX="5" PointY="9.375" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.Material" Width="1.5" PointX="7.25" PointY="5.5" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.Menu" Width="1.5" PointX="5" PointY="5.125" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.MenuToday" Width="1.5" PointX="7.25" PointY="8.25" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.Order" Width="1.5" PointX="5" PointY="1" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.OrderItem" Width="1.5" PointX="7.25" PointY="1.125" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.SpendingMoney" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.TableList" Width="1.5" PointX="2.75" PointY="7.625" />
+        <AssociationConnector Association="RestaurantManagementModel.FK_Material_FoodResource" />
+        <AssociationConnector Association="RestaurantManagementModel.FK_Material_Menu" />
+        <AssociationConnector Association="RestaurantManagementModel.FK_MenuToday_Menu" />
+        <AssociationConnector Association="RestaurantManagementModel.FK_OrderItem_Menu" />
+        <AssociationConnector Association="RestaurantManagementModel.FK_Order_TableList" />
+        <AssociationConnector Association="RestaurantManagementModel.FK_Order_User" />
+        <AssociationConnector Association="RestaurantManagementModel.FK_OrderItem_Order" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
