@@ -28,5 +28,13 @@ namespace RestaurantMng.Data.Models
         public virtual DbSet<GroupUser> GroupUsers { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<FoodResource> FoodResources { get; set; }
+        public virtual DbSet<Material> Materials { get; set; }
+        public virtual DbSet<Menu> Menus { get; set; }
+        public virtual DbSet<MenuToday> MenuTodays { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<OrderItem> OrderItems { get; set; }
+        public virtual DbSet<SpendingMoney> SpendingMoneys { get; set; }
+        public virtual DbSet<TableList> TableLists { get; set; }
     }
 }
