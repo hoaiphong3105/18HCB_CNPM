@@ -18,6 +18,7 @@ namespace RestaurantMng.WebApplication
             container.RegisterType<IUnitOfWork, EFUnitOfWork>(new ContainerControlledLifetimeManager());
             container.RegisterType(typeof(IRepository<,>),typeof(EFRepository<,>));
             container.RegisterType<IUserService, UserService>();
+            container.RegisterType<ITableService, TableService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
