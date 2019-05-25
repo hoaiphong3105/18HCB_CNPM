@@ -1,0 +1,70 @@
+﻿@using RestaurantMng.Data.Models;
+@using RestaurantMng.Service.User.Models.Dtos;
+@model List<User>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<string> BoPhan = new List<string>() { "Admin", "Quản lý", "Đầu bếp", "Thu ngân", "Phục vụ" };
+}
+
+@section style{
+    <link href="~/Content/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/ionicons.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+}
+
+@section scripts{
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script>
+
+        $(function () {
+            $('#example2').DataTable({
+                'paging': true,
+                'lengthChange': false,
+                'searching': true,
+                'ordering': true,
+                'info': true,
+                'autoWidth': false
+            })
+        })
+    </script>
+}
+
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Danh sách nhân viên</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <table id="example2" class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Họ và tên</th>
+                    <th>Account</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày sinh</th>
+                    <th>Số điện thoại</th>
+                    <th>Lương</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <th>@p.FullName</th>
+                        <th>@p.UserName</th>
+                        <th>@p.Address</th>
+                        <th>@p.DateOfBirth</th>
+                        <th>@p.Phone</th>
+                        <th>@p.Salary</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <!-- /.box-body -->
+</div>
+<!-- /.box -->

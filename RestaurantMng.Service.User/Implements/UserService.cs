@@ -160,7 +160,7 @@ namespace RestaurantMng.Service.User.Implements
             var result = new ResultModel<List<Data.Models.User>>();
             try
             {
-                var data = _userRepository.FindAll(x => x.Status == false)
+                var data = _userRepository.FindAll()
                     .ToList();
                 result.Data = data;
             }
