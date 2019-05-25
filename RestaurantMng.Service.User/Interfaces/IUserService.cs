@@ -1,10 +1,5 @@
 ﻿using RestaurantMng.Service.User.Models.Dtos;
-using RestaurantMng.Service.User.Models.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestaurantMng.Service.User.Interfaces
 {
@@ -14,7 +9,7 @@ namespace RestaurantMng.Service.User.Interfaces
         /// get all
         /// </summary>
         /// <returns></returns>
-        ResultModel<List<UserViewModel>> GetAllUser();
+        ResultModel<List<Data.Models.User>> GetAllUser();
         
         /// <summary>
         /// Login
@@ -36,7 +31,7 @@ namespace RestaurantMng.Service.User.Interfaces
         /// </summary>
         /// <param name="userVM"></param>
         /// <returns></returns>
-        ResultModel<int> CreateUser(UserViewModel userVM);
+        ResultModel<int> CreateUser(Data.Models.User userEntity);
 
         /// <summary>
         /// Đổi mật khẩu

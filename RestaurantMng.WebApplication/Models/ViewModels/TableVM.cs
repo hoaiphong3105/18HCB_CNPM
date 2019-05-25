@@ -1,4 +1,4 @@
-﻿namespace RestaurantMng.Service.User.Models.ViewModels
+﻿namespace RestaurantMng.WebApplication.ViewModels
 {
     public class TableVM
     {

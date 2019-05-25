@@ -1,12 +1,8 @@
 ﻿using RestaurantMng.Core.Common;
 using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.Service.User.Models.Dtos;
-using RestaurantMng.Service.User.Models.ViewModels;
-using RestaurantMng.WebApplication.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using RestaurantMng.WebApplication.ViewModels;
+using System.Configuration;
 using System.Web.Mvc;
 
 namespace RestaurantMng.WebApplication.Controllers
@@ -86,11 +82,23 @@ namespace RestaurantMng.WebApplication.Controllers
         [HttpPost]
         public ActionResult CreateUser(UserViewModel model)
         {
-            var user = new UserViewModel();
-            user.FullName = "Triệu Mẫn2";
-            user.UserName = "thungan1";
-            user.GroupID = 4;
-            var result = _iUserService.CreateUser(model);
+            // test
+            model = new UserViewModel();
+            model.FullName = "Triệu Mẫn2";
+            model.UserName = "thungan1";
+            model.GroupID = 4;
+            // end test
+
+            var user = new Data.Models.User();
+            user.FullName = user.FullName;
+            user.UserName = user.UserName;
+            user.Address = user.Address;
+            user.DateOfBirth = user.DateOfBirth;
+            user.Phone = user.Phone;
+            user.GroupID = user.GroupID;
+            user.Password = Encryption.HashMD5(ConfigurationManager.AppSettings["DefaultPassword"], user.UserName);
+            user.Status = true;
+            var result = _iUserService.CreateUser(user);
             return View();
         }
     }

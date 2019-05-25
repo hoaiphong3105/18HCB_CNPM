@@ -2,9 +2,6 @@
 using RestaurantMng.Service.User.Interfaces;
 using System;
 using RestaurantMng.Service.User.Models.Dtos;
-using RestaurantMng.Service.User.Models.ViewModels;
-using RestaurantMng.Core.Common;
-using System.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -125,14 +122,14 @@ namespace RestaurantMng.Service.User.Implements
         /// <summary>
         /// Thêm mới nhân viên 
         /// </summary>
-        /// <param name="userVM"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        public ResultModel<int> CreateUser(UserViewModel userVM)
+        public ResultModel<int> CreateUser(Data.Models.User user)
         {
             var result = new ResultModel<int>();
             try
             {
-                var checkUser = CheckUserExist(userVM.UserName);
+                var checkUser = CheckUserExist(user.UserName);
                 if (checkUser.Code == 1)
                 {
                     result.Code = checkUser.Code;
@@ -140,16 +137,6 @@ namespace RestaurantMng.Service.User.Implements
                 }
                 else
                 {
-                    var user = new Data.Models.User();
-                    user.FullName = userVM.FullName;
-                    user.UserName = userVM.UserName;
-                    user.Address = userVM.Address;
-                    user.DateOfBirth = userVM.DateOfBirth;
-                    user.Phone = userVM.Phone;
-                    user.GroupID = userVM.GroupID;
-                    user.Password = Encryption.HashMD5(ConfigurationManager.AppSettings["DefaultPassword"], userVM.UserName);
-                    user.Status = true;
-
                     _userRepository.Add(user);
                     _unitOfWork.Commit();
 
@@ -168,24 +155,13 @@ namespace RestaurantMng.Service.User.Implements
         /// 
         /// </summary>
         /// <returns></returns>
-        public ResultModel<List<UserViewModel>> GetAllUser()
+        public ResultModel<List<Data.Models.User>> GetAllUser()
         {
-            var result = new ResultModel<List<UserViewModel>>();
+            var result = new ResultModel<List<Data.Models.User>>();
             try
             {
                 var data = _userRepository.FindAll(x => x.Status == false)
-                    .Select(x => new UserViewModel()
-                    {
-                        Id = x.ID,
-                        Address = x.Address,
-                        DateOfBirth = x.DateOfBirth,
-                        FullName = x.FullName,
-                        GroupID = x.GroupID ?? 0,
-                        Password = "",
-                        GroupName = x.GroupUser.GroupName,
-                        Phone = x.Phone,
-                        UserName = x.UserName,
-                    }).ToList();
+                    .ToList();
                 result.Data = data;
             }
             catch (Exception ex)
@@ -195,7 +171,7 @@ namespace RestaurantMng.Service.User.Implements
             }
 
             return result;
-        } 
+        }
 
         /// <summary>
         /// Xóa user

@@ -1,10 +1,5 @@
 ﻿using RestaurantMng.Service.User.Models.Dtos;
-using RestaurantMng.Service.User.Models.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestaurantMng.Service.User.Interfaces
 {
@@ -35,7 +30,7 @@ namespace RestaurantMng.Service.User.Interfaces
         /// 
         /// </summary>
         /// <returns></returns>
-        ResultModel<List<TableVM>> GetAllTable();
+        ResultModel<List<Data.Models.TableList>> GetAllTable();
 
         /// <summary>
         /// 

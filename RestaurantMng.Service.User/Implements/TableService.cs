@@ -1,12 +1,9 @@
 ﻿using RestaurantMng.Data.Interfaces;
 using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.Service.User.Models.Dtos;
-using RestaurantMng.Service.User.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestaurantMng.Service.User.Implements
 {
@@ -95,18 +92,12 @@ namespace RestaurantMng.Service.User.Implements
         }
 
 
-        public ResultModel<List<TableVM>> GetAllTable()
+        public ResultModel<List<Data.Models.TableList>> GetAllTable()
         {
-            var result = new ResultModel<List<TableVM>>();
+            var result = new ResultModel<List<Data.Models.TableList>>();
             try
             {
-                var data = _tableRepository.FindAll(x => x.Status == 0)
-                    .Select(x => new TableVM()
-                    {
-                        Id = x.TableId,
-                        TableName = x.TableName,
-                        Status = x.Status
-                    }).ToList();
+                var data = _tableRepository.FindAll(x => x.Status == 0).ToList();
                 result.Data = data;
             }
             catch (Exception ex)
@@ -124,7 +115,7 @@ namespace RestaurantMng.Service.User.Implements
             var result = new ResultModel<NullModel>();
             try
             {
-                var tableEntity = _tableRepository.FindSingle(x=>x.TableName.Equals(tableName));
+                var tableEntity = _tableRepository.FindSingle(x => x.TableName.Equals(tableName));
                 if (tableEntity == null)
                 {
                     result.Code = -1;
