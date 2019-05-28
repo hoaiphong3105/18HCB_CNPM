@@ -1,0 +1,180 @@
+﻿@using RestaurantMng.WebApplication.ViewModels
+@model  List<TableVM>
+
+@{
+    ViewBag.Title = "Thu ngân";
+}
+
+@section style{
+    <style>
+        /*--CSS--*/
+        .block {
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .circle {
+            background: orange;
+            border-radius: 200px;
+            color: white;
+            height: 200px;
+            font-weight: bold;
+            width: 200px;
+            display: table;
+            margin: 20px auto;
+        }
+
+            .circle p {
+                vertical-align: middle;
+                display: table-cell;
+            }
+
+        .divshow {
+            position: absolute;
+            z-index: 1;
+        }
+
+        .btn-group {
+            position: relative;
+        }
+
+        .modal {
+            text-align: center;
+        }
+
+        @@media screen and (min-width: 768px) {
+            .modal:before {
+                display: inline-block;
+                vertical-align: middle;
+                content: " ";
+                height: 100%;
+            }
+        }
+
+        .modal-dialog {
+            display: inline-block;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        /*.test:after {
+            content: '\2807';
+            font-size: 30px;
+            color: black;
+            position: absolute;
+        }*/
+
+
+    </style>
+}
+
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $('a').click(function () {
+                //    $('#slide-div').fadeOut();
+                $(this).css({ 'cursor': 'auto' });
+            });
+
+            $('#slide-div').click(function () {
+                //    $(this).fadeOut(500);
+            }).css({ 'cursor': 'pointer' });
+        });
+
+        $('.circle').click(function (e) {
+
+            var tableId = $(this).data('id_nguoigiugia');
+            var orderId = $(this).data('id_daugia');
+
+            $.ajax({
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                //data: JSON.stringify({ tableId: tableId, orderId: orderId }),
+                success: function (response) {
+
+                    var id = response.id;
+                    var iddg = response.iddg;
+                    $('#txtidnguoigiugia').val(id);
+                    $('#txtiddaugia').val(iddg);
+
+                    $('#myModal').modal('show');
+                },
+                failure: function (response) {
+                    alert(response);
+                },
+                error: function (response) {
+                    alert(response);
+                }
+            });
+        });
+
+        //$(".circle").hover(function (event) {
+        //}, function () {
+        //    $("#divtoshow").hide();
+        //});
+
+        //$(document).mouseup(function (e) {
+        //    var container = $(".circle");
+        //    var needhide = $("#divtoshow");
+
+        //    // if the target of the click isn't the container nor a descendant of the container
+        //    if (!container.is(e.target) && container.has(e.target).length === 0 && !container.is(needhide)) {
+        //        needhide.hide();
+        //    }
+        //});
+
+
+
+    </script>
+
+
+}
+
+@*<div class="divshow" id="divtoshow" style="display: none;">
+    <span id="divTitle"></span>
+    SHOW ME!
+</div>*@
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog modal-lg"  style="max-width: 500px; min-width: 200px">
+        <div class="modal-content">
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h1>Header</h1>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body">
+                <p id="txtidnguoigiugia">Body</p>
+                <p id="txtiddaugia">Body</p>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer modal-footer--mine">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="jumbotron text-center">
+    <h2>DANH SÁCH BÀN ĂN ĐANG PHỤC VỤ</h2>
+</div>
+
+<div class="row">
+
+    @*@foreach (var item in Model)
+        {
+            <div class="col-md-4 block">
+                <h2>Getting started</h2>
+                <div id="slide-div" class="circle">
+                    <p>@item.TableName</p>
+                </div>
+            </div>
+        }*@
+    <div class="col-md-4 block">
+        <h2>Getting started</h2>
+        <div id="slide-div" class="circle" action="@Url.Action("DetailOrder", "Manager", new { tableId = 1, orderId = 2})" method="post">
+            <p>TableName</p>
+        </div>
+    </div>
+</div>

@@ -6,21 +6,22 @@ using System.Web.Mvc;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
-    public class ManagerController : Controller
+    public class CashierController : Controller
     {
         // GET: Manage
         public ActionResult Index()
         {
             return View();
         }
-        public ActionResult Menu()
-        {
-            return PartialView("PVTopGiaCao");
-        }
-
+        [HttpPost]
         public ActionResult DetailOrder(int tableId, int orderId)
         {
             return Json(new { id = 23123, iddg = "khong co gi"}, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult TinhTien(int tableId, int orderId)
+        {
+            return Json(new { message = "thanh cong", tongtien = "Tong tien" }, JsonRequestBehavior.AllowGet);
         }
     }
 }
