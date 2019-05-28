@@ -51,9 +51,11 @@
   <ItemGroup>
     <Compile Include="Implements\OrderService.cs" />
     <Compile Include="Implements\TableService.cs" />
+    <Compile Include="Implements\CashierService.cs" />
     <Compile Include="Implements\UserService.cs" />
     <Compile Include="Interfaces\IOrderService.cs" />
     <Compile Include="Interfaces\ITableService.cs" />
+    <Compile Include="Interfaces\ICashierService.cs" />
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Models\Dtos\LoginDto.cs" />
     <Compile Include="Models\Dtos\ResultModel.cs" />

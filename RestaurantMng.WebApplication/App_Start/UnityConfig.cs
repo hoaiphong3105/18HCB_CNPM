@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using Unity;
 using Unity.Lifetime;
 using Unity.Mvc5;
+using RestaurantMng.Service.Implements;
+using RestaurantMng.Service.Interfaces;
 
 namespace RestaurantMng.WebApplication
 {
@@ -19,6 +21,7 @@ namespace RestaurantMng.WebApplication
             container.RegisterType(typeof(IRepository<,>),typeof(EFRepository<,>));
             container.RegisterType<IUserService, UserService>();
             container.RegisterType<ITableService, TableService>();
+            container.RegisterType<ICashierService, CashierService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }
