@@ -26,5 +26,21 @@ namespace RestaurantMng.WebApplication.Controllers
 
             return View();
         }
+        public ActionResult MenuManager()
+        {
+            return PartialView("PVMenuManager");
+        }
+        public ActionResult MenuChef()
+        {
+            return PartialView("PVMenuChef");
+        }
+        public ActionResult MenuEmployee()
+        {
+            return PartialView("PVMenuEmployee");
+        }
+        public ActionResult MenuCashier()
+        {
+            return PartialView("PVMenuCashier");
+        }
     }
 }
