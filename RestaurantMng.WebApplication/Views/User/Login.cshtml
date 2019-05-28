@@ -1,13 +1,103 @@
-﻿
-@{
-    ViewBag.Title = "Login";
+﻿@{
+    Layout = null;
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Đăng nhập</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.7 -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome -->
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    <!-- Ionicons -->
+    <link href="~/Content/css/ionicons.min.css" rel="stylesheet" />
+    <!-- Theme style -->
+    <link href="~/Content/css/AdminLTE.min.css" rel="stylesheet" />
+    <!--notify-->
+    <link href="~/Content/plugins/jnoty/jnoty.css" rel="stylesheet" />
+    <style type="text/css">
+        .login-page {
+            /*Image background*/
+            background-image: url(../../Content/images/restaurant-background.jpg);
+            /* Full height */
+            height: initial;
+            /* Center and scale the image nicely */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+        /*.login-box-body,
+        .register-box-body {
+            background: none !important; 
+        }*/
 
-<h2>Login</h2>
-<form method="post" action="@Url.Action("Login","User")">
-    <label>Username</label>
-    <input type="text" name="username" />
-    <label>Password</label>
-    <input type="password" name="password" />
-    <button>Đăng nhập</button>
-</form>
+        input {
+            outline: 0 !important;
+            border-width: 0 0 1px !important;
+            border-color: lightskyblue !important;
+        }
+
+    </style>
+</head>
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <p>Đăng nhập</p>
+        </div>
+        <!-- /.login-logo -->
+        <div class="login-box-body">
+            <form method="post" action="@Url.Action("Login","User")">
+                <div class="form-group has-feedback">
+                    @if (ViewBag.UserName != null)
+                    {
+                        <input name="username" type="text" value="@ViewBag.UserName" class="form-control" placeholder="Tên đăng nhập">
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    }
+                    else
+                    {
+                        <input name="username" type="text" class="form-control" placeholder="Tên đăng nhập">
+                        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                    }
+                </div>
+                <div class="form-group has-feedback">
+                    <input name="password" type="password" class="form-control" placeholder="Mật khẩu">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="row">
+                    <div class="col-xs-8">
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox"> Nhớ mật khẩu
+                            </label>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-xs-4">
+                        <button type="submit" class="btn btn-primary btn-block btn-flat">Đăng nhập</button>
+                    </div>
+                    <!-- /.col -->
+                </div>
+            </form>
+        </div>
+        <!-- /.login-box-body -->
+    </div>
+    <!-- /.login-box -->
+    <!-- jQuery 3 -->
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <!--notiy-->
+    <script src="~/Content/plugins/jnoty/jnoty.js"></script>
+    <script src="~/Content/js/common.js"></script>
+</body>
+</html>
+@if (ViewBag.Message != null)
+{
+    <script>
+        showalert('@ViewBag.Message', 2);
+    </script>
+}

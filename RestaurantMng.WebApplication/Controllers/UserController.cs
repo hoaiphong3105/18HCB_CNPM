@@ -45,9 +45,10 @@ namespace RestaurantMng.WebApplication.Controllers
         /// <param name="password"></param>
         /// <returns></returns>
         [HttpPost]
+        [Route("dang-nhap")]
         public ActionResult Login(string username, string password)
         {
-            string passwordHash = Encryption.HashMD5(password, username);
+            string passwordHash = Encryption.HashMD5(password.Trim(), username.Trim());
 
             var result = _iUserService.CheckLogin(username, passwordHash);
             if (result.Code == 1)
@@ -57,6 +58,8 @@ namespace RestaurantMng.WebApplication.Controllers
             }
             else
             {
+                ViewBag.Message = result.Message;
+                ViewBag.UserName = username;
                 return View();
             }
         }

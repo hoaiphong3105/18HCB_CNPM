@@ -187,6 +187,7 @@
     <Compile Include="Authorization\Authorization.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MUserController.cs" />
+    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
@@ -208,7 +209,18 @@
     <Content Include="Content\css\skin-blue.min.css" />
     <Content Include="Content\dataTables.bootstrap.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\images\main-background.jpg" />
+    <Content Include="Content\images\restaurant-background.jpg" />
     <Content Include="Content\ionicons.min.css" />
+    <Content Include="Content\js\common.js" />
+    <Content Include="Content\plugins\jnoty\jnoty.css" />
+    <Content Include="Content\plugins\jnoty\jnoty.js" />
+    <Content Include="Content\plugins\select2\select2-bootstrap.css" />
+    <Content Include="Content\plugins\select2\select2-bootstrap.min.css" />
+    <Content Include="Content\plugins\select2\select2.css" />
+    <Content Include="Content\plugins\select2\select2.js" />
+    <Content Include="Content\plugins\select2\select2.min.css" />
+    <Content Include="Content\plugins\select2\select2.min.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -263,6 +275,7 @@
     <Content Include="Views\User\Login.cshtml" />
     <Content Include="Views\User\CreateUser.cshtml" />
     <Content Include="Views\MUser\Index.cshtml" />
+    <Content Include="Views\Order\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
