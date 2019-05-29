@@ -189,12 +189,12 @@
     <Compile Include="Controllers\CashierController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
     <Compile Include="Controllers\MUserController.cs" />
-    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\OrderItemDetailVM.cs" />
     <Compile Include="Models\ViewModels\OrderOrderItemVM.cs" />
     <Compile Include="Models\ViewModels\TableVM.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />

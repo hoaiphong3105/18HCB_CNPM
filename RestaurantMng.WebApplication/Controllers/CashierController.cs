@@ -1,17 +1,8 @@
 ﻿using Newtonsoft.Json;
 using RestaurantMng.Service.Interfaces;
 using RestaurantMng.WebApplication.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Management;
-using System.Reflection.Metadata;
-using System.Web;
 using System.Web.Mvc;
-using System.Windows.Documents;
-using static System.Collections.Specialized.BitVector32;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
