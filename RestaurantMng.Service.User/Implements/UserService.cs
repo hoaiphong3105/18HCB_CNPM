@@ -130,7 +130,7 @@ namespace RestaurantMng.Service.User.Implements
             try
             {
                 var checkUser = CheckUserExist(user.UserName);
-                if (checkUser.Code == 1)
+                if (checkUser.Code == -1)
                 {
                     result.Code = checkUser.Code;
                     result.Message = checkUser.Message;

@@ -1,5 +1,6 @@
 ﻿using RestaurantMng.Data.Models;
 using RestaurantMng.Service.User.Interfaces;
+using RestaurantMng.Service.User.Models.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,25 @@ namespace RestaurantMng.WebApplication.Controllers
             }
 
             return PartialView("PartialListGroupUser", new List<GroupUser>());
+        }
+
+        /// <summary>
+        /// Insert user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public int Insert(User user)
+        {
+            var result = new ResultModel<int>();
+
+            if(user != null)
+            {
+                user.Status = true;
+                result = _iUserService.CreateUser(user);
+            }
+
+            return result.Code;
         }
     }
 }

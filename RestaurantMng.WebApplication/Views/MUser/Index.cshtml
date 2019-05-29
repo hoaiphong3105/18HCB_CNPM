@@ -39,6 +39,43 @@
             isAddedNew = true;
         });
 
+        $('#submitChange').click(function () {
+            if (isAddedNew) {
+                var employee = {
+                    UserName: $('#UserName').val(),
+                    FullName: $('#FullName').val(),
+                    Password: $('#Password').val(),
+                    Address: $('#Address').val(),
+                    GroupID: $('#GroupID').val(),
+                    DateOfBirth: $('#DateOfBirth').val(),
+                    Phone: $('#Phone').val(),
+                    Salary: $('#Salary').val(),
+                    Status: true,
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Insert", "MUser")',
+                    data: JSON.stringify(employee),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (rs) {
+                        if (rs >= 0) {
+                            table.ajax.reload(null, false);
+                            alert("Them thanh cong!");
+                        } else {
+                            alert("Them that bai!");
+                        }
+                    },
+                    error: function () {
+                        alert("Error!");
+                    }
+                });
+            }
+            else {
+
+            }
+        });
+
     </script>
 }
 
