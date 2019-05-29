@@ -10,7 +10,8 @@ namespace RestaurantMng.Service.Interfaces
         /// </summary>
         /// <returns></returns>
         object GetAllOrder();
-        
+        object GetDetailOrder(int id);
+        bool ThanhToan(int id);
         ///// <summary>
         ///// Login
         ///// </summary>

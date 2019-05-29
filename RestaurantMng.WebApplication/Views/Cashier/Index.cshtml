@@ -1,5 +1,5 @@
 ﻿@using RestaurantMng.WebApplication.ViewModels
-@model  List<dynamic>
+@model  List<OrderOrderItemVM>
 
 @{
     ViewBag.Title = "Thu ngân";
@@ -70,32 +70,53 @@
 
 @section scripts{
     <script type="text/javascript">
+        $(document).ready(function () {
+            loading();
+        });
+
         $(function () {
             $('a').click(function () {
                 //    $('#slide-div').fadeOut();
                 $(this).css({ 'cursor': 'auto' });
             });
 
-            $('#slide-div').click(function () {
+            $('.circle').click(function () {
                 //    $(this).fadeOut(500);
             }).css({ 'cursor': 'pointer' });
         });
 
         $('.circle').click(function (e) {
-
-            var tableId = $(this).data('id_nguoigiugia');
-            var orderId = $(this).data('id_daugia');
-
+            var id = $(this).data('orderid');
             $.ajax({
                 type: $(this).attr('method'),
                 url: $(this).attr('action'),
                 //data: JSON.stringify({ tableId: tableId, orderId: orderId }),
                 success: function (response) {
+                    var totalPrice = 0;
+                    $('#detail').text('');
+                    $.each(response, function (index, item) {
+                        $('#detail').append(`
+                            <div class="col-md-3">
+                                <p>${item.ItemName}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p>${item.Note}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p>${item.Price}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <p>${item.Quantity}</p>
+                            </div>
+
+                            `);
+                        totalPrice = item.TotalPrice;
+                    });
+                    $('#totalPrice').html(`Thành tiền: ${totalPrice} vnđ`);
                     
-                    $('#tableId').text(response.id);
-                    $('#orderId').text(response.iddg);
 
                     $('#myModal').modal('show');
+                    $('#ThanhToan').attr("data-orderid", id);
                 },
                 failure: function (response) {
                     alert(response);
@@ -106,41 +127,42 @@
             });
         });
 
-        $('#DetailOrder').submit(function (e) {
+        $('#ThanhToan').click(function (e) {
+            
             e.preventDefault(); // avoid to execute the actual submit of the form.
-            var form = $(this);
             $('#myModal').modal('hide');
-
             $.ajax({
-                type: form.attr('method'),
-                url: form.attr('action'),
-                data: form.serialize(), // serializes the form's elements.
+                type: $(this).attr('method'),
+                url: $(this).attr('action'),
+                //data: form.serialize(), // serializes the form's elements.
+                data: { 'orderId': $('#ThanhToan').data('orderid') },
+                cache: false,
                 success: function (response) {
-                    alert(response.message); // show response from the php script.
+                    showalert('failure', 1);
                 },
                 failure: function (response) {
-                    alert('failure');
+                   showalert('failure', 0);
                 },
                 error: function (response) {
-                    alert('error');
+                    showalert('Error', 0);
                 }
             });
         });
 
-        //$(".circle").hover(function (event) {
-        //}, function () {
-        //    $("#divtoshow").hide();
-        //});
+            //$(".circle").hover(function (event) {
+            //}, function () {
+            //    $("#divtoshow").hide();
+            //});
 
-        //$(document).mouseup(function (e) {
-        //    var container = $(".circle");
-        //    var needhide = $("#divtoshow");
+            //$(document).mouseup(function (e) {
+            //    var container = $(".circle");
+            //    var needhide = $("#divtoshow");
 
-        //    // if the target of the click isn't the container nor a descendant of the container
-        //    if (!container.is(e.target) && container.has(e.target).length === 0 && !container.is(needhide)) {
-        //        needhide.hide();
-        //    }
-        //});
+            //    // if the target of the click isn't the container nor a descendant of the container
+            //    if (!container.is(e.target) && container.has(e.target).length === 0 && !container.is(needhide)) {
+            //        needhide.hide();
+            //    }
+            //});
 
 
 
@@ -150,31 +172,45 @@
 }
 
 @*<div class="divshow" id="divtoshow" style="display: none;">
-    <span id="divTitle"></span>
-    SHOW ME!
-</div>*@
+        <span id="divTitle"></span>
+        SHOW ME!
+    </div>*@
 <div id="myModal" class="modal fade">
-    <div class="modal-dialog modal-lg" style="max-width: 500px; min-width: 200px">
+    <div class="modal-dialog modal-lg" style="max-width: 800px; min-width: 200px">
         <form id="DetailOrder" action="@Url.Action("TinhTien", "Cashier")" method="post">
             <div class="modal-content">
 
                 <!-- Header -->
-                <div class="modal-header">
-                    <h1>Header</h1>
+                <div class="modal-header text-center" style="background: gold">
+                    <h1 style="color: white">Hóa đơn</h1>
                 </div>
 
                 <!-- Body -->
                 <div class="modal-body">
-                    <p id="tableId" name="tableId">1</p>
-                    <p id="orderId" name="orderId">1</p>
-                </div>
+                        <div class="col-md-3">
+                            <p>Tên món</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>Ghi chú</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>Đơn giá</p>
+                        </div>
+                        <div class="col-md-3">
+                            <p>Số lượng</p>
+                        </div>
+                    
+                    <div id="detail">
 
-                <!-- Footer -->
-                <div class="modal-footer modal-footer--mine">
-                    <button type="submit" class="btn btn-default">Thanh toán</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
                 </div>
-            </div>
+                    <p id="totalPrice" style="margin-top: 50px; margin-left: 30px; font-size: 20px" name="tableId"></p>
+                    <!-- Footer -->
+                    <div class="modal-footer modal-footer--mine">
+                        <button type="button" id="ThanhToan" data-orderid="0" class="btn btn-default" action="@Url.Action("TinhTien", "Cashier")" method="post">Thanh toán</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
         </form>
     </div>
 </div>
@@ -185,19 +221,16 @@
 <div class="row">
 
     @foreach (var item in Model)
-        {
-            <div class="col-md-4 block">
-                <h2>Getting started</h2>
-                <div id="slide-div" class="circle">
-                    <p>@item.TableName</p>
-                </div>
-            </div>
+    {
         <div class="col-md-4 block">
-        <h2>Getting started</h2>
-        <div id="slide-div" class="circle" action="@Url.Action("DetailOrder", "Cashier", new { tableId = 1, orderId = 2})" method="post">
-            <p>TableName</p>
+            <div id="slide-div" class="circle" data-orderid="@item.OrderId" action="@Url.Action("DetailOrder", "Cashier", new { tableId = item.TableId, orderId = item.OrderId})" method="post">
+                <p>@item.TableName</p>
+            </div>
+        </div>
+    }
+    <div class="col-md-4 block">
+        <div id="slide-div" class="circle" data-orderid="5" action="@Url.Action("DetailOrder", "Cashier", new { tableId = 5, orderId = 5})" method="get">
+            <p>asd</p>
         </div>
     </div>
-        }
-    
 </div>

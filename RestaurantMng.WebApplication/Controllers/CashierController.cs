@@ -3,9 +3,15 @@ using RestaurantMng.Service.Interfaces;
 using RestaurantMng.WebApplication.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Management;
+using System.Reflection.Metadata;
 using System.Web;
 using System.Web.Mvc;
+using System.Windows.Documents;
+using static System.Collections.Specialized.BitVector32;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
@@ -25,25 +31,36 @@ namespace RestaurantMng.WebApplication.Controllers
             var resVM = JsonConvert.DeserializeObject<List<OrderOrderItemVM>>(json);
 
 
-            var resVM2 = res as IEnumerable<object>;
 
-            var resVM3 = resVM2 as IEnumerable<OrderOrderItemVM>;
-
-
-
-            return View(resVM2);
+            return View(resVM);
+        }
+        [HttpGet]
+        public ActionResult DetailOrder()
+        {
+            return PartialView("PVDetailOrder", null);
         }
         [HttpPost]
-        public ActionResult DetailOrder(int tableId, int orderId)
+        public ActionResult DetailOrder(int? tableId, int? orderId)
         {
-            return Json(new { id = 23123, iddg = "khong co gi"}, JsonRequestBehavior.AllowGet);
+            if (orderId == null)
+                return PartialView("PVDetailOrder", null);
+            var res = _iOrderService.GetDetailOrder(orderId.Value);
+            var json = JsonConvert.SerializeObject(res);
+            var resVM = JsonConvert.DeserializeObject<List<OrderItemDetailVM>>(json);
+
+            return Json(resVM, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult TinhTien(int tableId, int orderId)
+        public ActionResult TinhTien(int orderId)
         {
-            return Json(new { message = "thanh cong", tongtien = "Tong tien" }, JsonRequestBehavior.AllowGet);
-        }
+            var res = _iOrderService.ThanhToan(orderId);
+            if (!res)
+                return new HttpStatusCodeResult(500, "Internal server error!");
 
+            
+
+            return Json(new { message = "thanh cong" }, JsonRequestBehavior.AllowGet);
+        }
         [HttpGet]
         public ActionResult GetAll()
         {
