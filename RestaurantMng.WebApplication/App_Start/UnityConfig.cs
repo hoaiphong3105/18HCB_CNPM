@@ -22,6 +22,7 @@ namespace RestaurantMng.WebApplication
             container.RegisterType<IUserService, UserService>();
             container.RegisterType<ITableService, TableService>();
             container.RegisterType<ICashierService, CashierService>();
+            container.RegisterType<IGroupUserService, GroupUserService>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

@@ -49,10 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Implements\GroupUserService.cs" />
     <Compile Include="Implements\OrderService.cs" />
     <Compile Include="Implements\TableService.cs" />
     <Compile Include="Implements\CashierService.cs" />
     <Compile Include="Implements\UserService.cs" />
+    <Compile Include="Interfaces\IGroupUserService.cs" />
     <Compile Include="Interfaces\IOrderService.cs" />
     <Compile Include="Interfaces\ITableService.cs" />
     <Compile Include="Interfaces\ICashierService.cs" />
