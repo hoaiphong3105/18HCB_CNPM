@@ -11,14 +11,16 @@ namespace RestaurantMng.WebApplication.Controllers
     public class MUserController : Controller
     {
         private readonly IUserService _iUserService;
+        private readonly IGroupUserService _iGroupUserService;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="iUserService"></param>
-        public MUserController(IUserService iUserService)
+        public MUserController(IUserService iUserService, IGroupUserService iGroupUserService)
         {
             _iUserService = iUserService;
+            _iGroupUserService = iGroupUserService;
         }
 
         /// <summary>
@@ -35,6 +37,22 @@ namespace RestaurantMng.WebApplication.Controllers
             }
 
             return View(new List<User>());
+        }
+
+        /// <summary>
+        /// Partial View GroupUser
+        /// </summary>
+        /// <returns></returns>
+        public PartialViewResult PartialListGroupUser()
+        {
+            var result = _iGroupUserService.GetAll();
+            if (result.Code == 1) 
+            {
+                var groupUsers = result.Data.Where(x => x.Status == true).ToList();
+                return PartialView("PartialListGroupUser", groupUsers);
+            }
+
+            return PartialView("PartialListGroupUser", new List<GroupUser>());
         }
     }
 }

@@ -1,0 +1,9 @@
+﻿@using RestaurantMng.Data.Models;
+@using RestaurantMng.Service.User.Models.Dtos;
+@model List<GroupUser>
+
+@foreach (var item in Model)
+{
+    <option value="@item.ID">@item.GroupName</option>
+}
+

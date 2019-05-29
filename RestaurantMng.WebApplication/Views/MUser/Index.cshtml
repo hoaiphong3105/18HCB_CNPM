@@ -13,35 +13,46 @@
     <link href="~/Content/ionicons.min.css" rel="stylesheet" />
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+    <link href="~/Content/datatable/jquery.dataTables.min.css" rel="stylesheet" />
 }
 
 @section scripts{
-    <script src="~/Scripts/jquery.dataTables.min.js"></script>
     <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/datatable/jquery.dataTables.min.js"></script>
     <script>
+        var isAddedNew = false;
+        var table = $('#employeeTable').DataTable({
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': false,
+        });
 
-        $(function () {
-            $('#example2').DataTable({
-                'paging': true,
-                'lengthChange': false,
-                'searching': true,
-                'ordering': true,
-                'info': true,
-                'autoWidth': false
-            })
-        })
+        $('#employeeTable tbody').on('click', 'tr', function () {
+            $(this).toggleClass('selected');
+        });
+
+        $('#newEmployee').click(function () {
+            $('#modal-default').modal('show');
+            isAddedNew = true;
+        });
+
     </script>
 }
 
 <div class="box">
     <div class="box-header">
         <h3 class="box-title">Danh sách nhân viên</h3>
+        <button id="newEmployee" class="btn btn-block btn-success" style="width:auto;display:inline-block">+</button>
     </div>
     <!-- /.box-header -->
     <div class="box-body">
-        <table id="example2" class="table table-bordered table-striped">
+        <table id="employeeTable" class="table table-bordered table-hover dataTable">
             <thead>
                 <tr>
+                    <th hidden>ID</th>
                     <th>Họ và tên</th>
                     <th>Account</th>
                     <th>Địa chỉ</th>
@@ -54,6 +65,7 @@
                 @foreach (var p in Model)
                 {
                     <tr>
+                        <th>@p.ID
                         <th>@p.FullName</th>
                         <th>@p.UserName</th>
                         <th>@p.Address</th>
@@ -68,3 +80,78 @@
     <!-- /.box-body -->
 </div>
 <!-- /.box -->
+
+<div class="modal fade" id="modal-default" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Default Modal</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Account</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="UserName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Họ tên</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="FullName">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Mật khẩu</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Bộ phận</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="GroupID">
+                                    @Html.Action("PartialListGroupUser", "MUser")
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Địa chỉ</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="Addrss">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Ngày sinh</label>
+                            <div class="col-sm-10">
+                                <input type="date" class="form-control" id="DateOfBirth">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Số điện thoại</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="Phone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Lương</label>
+                            <div class="col-sm-10">
+                                <input type="number" class="form-control" id="Salary">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="submitChange" type="button" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
