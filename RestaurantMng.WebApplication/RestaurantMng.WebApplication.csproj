@@ -213,6 +213,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Authorization\Authorization.cs" />
+    <Compile Include="Controllers\ChefController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CashierController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
@@ -230,6 +231,9 @@
     <Compile Include="Models\ViewModels\TableVM.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SignalR\ConnectionMapping.cs" />
+    <Compile Include="SignalR\RestaurantMngHub.cs" />
+    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -342,7 +346,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="SignalR\" />
     <Folder Include="Views\Manage\" />
   </ItemGroup>
   <ItemGroup>
