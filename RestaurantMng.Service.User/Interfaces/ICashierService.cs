@@ -1,4 +1,5 @@
 ﻿using RestaurantMng.Service.User.Models.Dtos;
+using System;
 using System.Collections.Generic;
 
 namespace RestaurantMng.Service.Interfaces
@@ -11,48 +12,8 @@ namespace RestaurantMng.Service.Interfaces
         /// <returns></returns>
         object GetAllOrder();
         object GetDetailOrder(int id);
-        bool ThanhToan(int id);
-        ///// <summary>
-        ///// Login
-        ///// </summary>
-        ///// <param name="username"></param>
-        ///// <param name="password"></param>
-        ///// <returns></returns>
-        //ResultModel<LoginDto> CheckLogin(string username, string password);
-
-        ///// <summary>
-        ///// Kiểm tra user đã tồn tại trong hệ thống
-        ///// </summary>
-        ///// <param name="username"></param>
-        ///// <returns></returns>
-        //ResultModel<NullModel> CheckUserExist(string username);
-
-        ///// <summary>
-        ///// Thêm mới user
-        ///// </summary>
-        ///// <param name="userVM"></param>
-        ///// <returns></returns>
-        //ResultModel<int> CreateUser(Data.Models.User userEntity);
-
-        ///// <summary>
-        ///// Đổi mật khẩu
-        ///// </summary>
-        ///// <param name="userName"></param>
-        ///// <param name="password"></param>
-        ///// <returns></returns>
-        //ResultModel<NullModel> ChangePassword(int id, string password);
-
-        ///// <summary>
-        ///// Xóa user
-        ///// </summary>
-        ///// <param name="userName"></param>
-        ///// <param name="password"></param>
-        ///// <returns></returns>
-        //ResultModel<NullModel> RemoveUser(int id);
-
-        ///// <summary>
-        ///// SaveChanges
-        ///// </summary>
+        bool ThanhToan(int id, out string tableName);
+        object ThongKe(DateTime? fromDate, DateTime? toDate, int type);
         void Save();
     }
 }

@@ -3,10 +3,10 @@
     public class OrderItemDetailVM
     {
         public int Quantity { get; set; }
-        public int Note { get; set; }
+        public string Note { get; set; }
 
         public decimal Price { get; set; }
-        public decimal TotalPrice { get; set; }
+        public decimal Surcharge { get; set; }
 
         public string ItemName { get; set; }
 
