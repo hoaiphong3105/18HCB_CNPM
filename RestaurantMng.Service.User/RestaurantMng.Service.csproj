@@ -61,6 +61,7 @@
     <Compile Include="Interfaces\IUserService.cs" />
     <Compile Include="Models\Dtos\LoginDto.cs" />
     <Compile Include="Models\Dtos\ResultModel.cs" />
+    <Compile Include="Models\Request\OrderReq.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

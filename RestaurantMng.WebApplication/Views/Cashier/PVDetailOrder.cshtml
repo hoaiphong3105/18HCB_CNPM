@@ -1,0 +1,41 @@
+﻿
+@using RestaurantMng.WebApplication.ViewModels
+@model  List<OrderItemDetailVM>
+
+@{
+    decimal tongTien = 0;
+}
+<div class="col-md-3">
+    <p>Tên món</p>
+</div>
+<div class="col-md-3">
+    <p>Ghi chú</p>
+</div>
+<div class="col-md-3">
+    <p>Đơn giá</p>
+</div>
+<div class="col-md-3">
+    <p>Số lượng</p>
+</div>
+@if (Model != null)
+{
+    foreach (var item in Model)
+    {
+        <div class="col-md-3">
+            <p>@item.ItemName</p>
+        </div>
+        <div class="col-md-3">
+            <p>@item.Note</p>
+        </div>
+        <div class="col-md-3">
+            <p>@item.Price</p>
+        </div>
+        <div class="col-md-3">
+            <p>@item.Quantity</p>
+        </div>
+        {
+            tongTien = item.TotalPrice;
+        }
+    }
+}
+<p id="tableId" name="tableId">Thành tiền: @tongTien vnđ</p>

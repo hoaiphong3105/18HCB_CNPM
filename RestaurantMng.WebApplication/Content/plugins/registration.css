@@ -1,0 +1,115 @@
+﻿input, textarea {
+    outline: 0 !important;
+    border-width: 0 0 1px !important;
+    border-color: lightskyblue !important;
+}
+
+.select2-selection {
+    outline: 0 !important;
+    border-width: 0 0 1px !important;
+    border-color: lightskyblue !important;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: deepskyblue;
+    border-color: #367fa9;
+    padding: 1px 10px;
+    color: #fff;
+}
+
+.btn-default {
+    border: none !important;
+    padding: 2px !important;
+    background: none !important;
+    margin-left: 10px !important;
+}
+
+.qty .count {
+    color: #000;
+    display: inline-block;
+    vertical-align: top;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 20px;
+    padding: 0 2px;
+    min-width: 35px;
+    text-align: center;
+}
+
+.qty .plus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    background-color: deepskyblue;
+    width: 20px;
+    height: 20px;
+    font: 20px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+}
+
+.qty .minus {
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: top;
+    background-color: deepskyblue;
+    width: 20px;
+    height: 20px;
+    font: 20px/1 Arial,sans-serif;
+    text-align: center;
+    border-radius: 50%;
+    background-clip: padding-box;
+}
+
+.minus:hover {
+    background-color: #717fe0 !important;
+}
+
+.plus:hover {
+    background-color: #717fe0 !important;
+}
+/*Prevent text selection*/
+div.qty span {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+div.qty input {
+    border: 0;
+    width: 2%;
+}
+
+    div.qty nput::-webkit-outer-spin-button,
+    div.qty input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    div.qty input:disabled {
+        background-color: white;
+    }
+
+
+.callout {
+    padding: 0px 0px 0px 0px !important;
+}
+
+.modal {
+    text-align: center;
+    padding: 0 !important;
+}
+
+    .modal:before {
+        content: '';
+        display: inline-block;
+        height: 100%;
+        vertical-align: middle;
+        margin-right: -4px;
+    }
+
+.modal-dialog {
+    display: inline-block;
+    text-align: left;
+    vertical-align: middle;
+}

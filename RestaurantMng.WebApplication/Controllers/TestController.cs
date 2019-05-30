@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
-    [Authorization(Role = "Dau bep")]
+    //[Authorization(Role = "Dau bep")]
     public class TestController : Controller
     {
         // GET: Test

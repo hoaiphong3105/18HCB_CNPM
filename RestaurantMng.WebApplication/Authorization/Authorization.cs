@@ -18,4 +18,13 @@ namespace RestaurantMng.WebApplication.Authorization
             return (infoSession.Role == SystemRole.Admin || infoSession.Role == this.Role) ? true : false;
         }
     }
+
+    public static class Helper
+    {
+        public static LoginDto LoginUser()
+        {
+            var infoSession = (LoginDto)HttpContext.Current.Session[ConstCommon.USER_SESSION];
+            return infoSession;
+        }
+    }
 }
