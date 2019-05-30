@@ -21,6 +21,8 @@
     <script src="~/Scripts/datatable/jquery.dataTables.min.js"></script>
     <script>
         var isAddedNew = false;
+        var updatedRow = {};
+        var selectedRowID = -1;
         var table = $('#employeeTable').DataTable({
             'paging': true,
             'lengthChange': true,
@@ -30,16 +32,83 @@
             'autoWidth': false,
         });
 
-        $('#employeeTable tbody').on('click', 'tr', function () {
-            $(this).toggleClass('selected');
-        });
+        //$('#employeeTable tbody').on('click', 'tr', function () {
+        //    $(this).toggleClass('selected');
+        //});
 
         $('#newEmployee').click(function () {
             $('#modal-default').modal('show');
             isAddedNew = true;
         });
+        
+
+        function update(id) {
+            selectedRowID = id;
+        }
+
+        function deleteUser(id) {
+            selectedRowID = id;
+        }
+
+        $('#employeeTable tbody').on('click', '.updateBtn', function () {
+            updatedRow = $(this).closest("tr");
+            isAddedNew = false;
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetUser", "MUser")',
+                data: JSON.stringify({ id: selectedRowID }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    if (data) {
+                        $('#ID').val(data.ID);
+                        $('#UserName').val(data.UserName);
+                        $('#FullName').val(data.FullName);
+                        $('#Password').val('');
+                        $('#Address').val(data.Address);
+                        $('#GroupID').val(data.GroupID);
+                        $('#DateOfBirth').val(data.DateOfBirth);
+                        $('#Phone').val(data.Phone);
+                        $('#Salary').val(data.Salary);
+                        $('#modal-default').modal('show');
+                    }
+                    else {
+                        alert("Khong co du lieu!");
+                    }
+                },
+                error: function (err) {
+                    alert("Error!");
+                }
+            });
+        });
+
+        $('#employeeTable tbody').on('click', '.deleteBtn', function () {
+            var row = $(this).closest("tr");
+            if (confirm('Xac nhan se xoa nhan vien nay?')) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Delete", "MUser")',
+                    data: JSON.stringify({ id: selectedRowID }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (rs) {
+                        if (rs.code > 0) {
+                            table.row(row).remove().draw(false);
+                            alert("Xoá thanh cong!");
+                        }
+                        else {
+                            alert(rs.message);
+                        }
+                    },
+                    error: function (err) {
+                        alert("Error!");
+                    }
+                });
+            }
+        });
 
         $('#submitChange').click(function () {
+            //insert
             if (isAddedNew) {
                 var employee = {
                     UserName: $('#UserName').val(),
@@ -59,11 +128,17 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (rs) {
-                        if (rs >= 0) {
-                            table.ajax.reload(null, false);
+                        if (rs.code >= 0) {
                             alert("Them thanh cong!");
+                            var newData = [
+                                rs.User.FullName, rs.User.UserName, rs.User.Address,
+                                rs.User.DateOfBirth, rs.User.Phone, rs.User.Salary, rs.User.ID
+                            ];
+                            table.row.add(newData).draw(false);
+                            $("#formMain")[0].reset();
+                            isAddedNew = false;
                         } else {
-                            alert("Them that bai!");
+                            alert(rs.message);
                         }
                     },
                     error: function () {
@@ -71,11 +146,49 @@
                     }
                 });
             }
+            //update
             else {
-
+                var employee = {
+                    ID: $('#ID').val(),
+                    UserName: $('#UserName').val(),
+                    FullName: $('#FullName').val(),
+                    Password: $('#Password').val(),
+                    Address: $('#Address').val(),
+                    GroupID: $('#GroupID').val(),
+                    DateOfBirth: $('#DateOfBirth').val(),
+                    Phone: $('#Phone').val(),
+                    Salary: $('#Salary').val(),
+                    Status: true,
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Update", "MUser")',
+                    data: JSON.stringify(employee),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (rs) {
+                        if (rs.code >= 0) {
+                            alert(rs.message);
+                            var newData = [
+                                rs.User.FullName, rs.User.UserName, rs.User.Address,
+                                rs.User.DateOfBirth, rs.User.Phone, data.Salary, rs.User.ID
+                            ]
+                            table.row(updatedRow).data(newData).draw();
+                        } else {
+                            alert("Cap nhat that bai!");
+                        }
+                    },
+                    error: function () {
+                        alert("Error!");
+                    }
+                });
             }
         });
 
+        $('#modal-default').on('hidden.bs.modal', function () {
+            isAddedNew = false;
+            $("#formMain")[0].reset();
+        })
     </script>
 }
 
@@ -89,26 +202,33 @@
         <table id="employeeTable" class="table table-bordered table-hover dataTable">
             <thead>
                 <tr>
-                    <th hidden>ID</th>
                     <th>Họ và tên</th>
                     <th>Account</th>
                     <th>Địa chỉ</th>
                     <th>Ngày sinh</th>
                     <th>Số điện thoại</th>
                     <th>Lương</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var p in Model)
                 {
                     <tr>
-                        <th>@p.ID
                         <th>@p.FullName</th>
                         <th>@p.UserName</th>
                         <th>@p.Address</th>
                         <th>@p.DateOfBirth</th>
                         <th>@p.Phone</th>
                         <th>@p.Salary</th>
+                        <th class="dt-center">
+                            <a class="updateBtn" href="#" onclick="update(@p.ID)">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            <a class="deleteBtn" href="#" onclick="deleteUser(@p.ID)">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </th>
                     </tr>
                 }
             </tbody>
@@ -128,7 +248,8 @@
                 <h4 class="modal-title">Default Modal</h4>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal">
+                <form id="formMain" class="form-horizontal">
+                    <input type="hidden" id="ID">
                     <div class="box-body">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Account</label>
@@ -159,7 +280,7 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Địa chỉ</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="Addrss">
+                                <input type="text" class="form-control" id="Address">
                             </div>
                         </div>
                         <div class="form-group">
