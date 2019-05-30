@@ -35,7 +35,7 @@ namespace RestaurantMng.WebApplication.SignalR
 
         public override Task OnConnected()
         {
-            string name = "user1";
+            string name = Authorization.Helper.GetUserID();
 
             _connections.Add(name, Context.ConnectionId);
 
@@ -43,7 +43,7 @@ namespace RestaurantMng.WebApplication.SignalR
         }
         public override Task OnReconnected()
         {
-            string name = "user1";
+            string name = Authorization.Helper.GetUserID();
 
             if (!_connections.GetConnections(name).Contains(Context.ConnectionId))
             {

@@ -3,6 +3,7 @@ using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.Service.User.Models.Dtos;
 using RestaurantMng.WebApplication.ViewModels;
 using System.Configuration;
+using System.Web;
 using System.Web.Mvc;
 
 namespace RestaurantMng.WebApplication.Controllers
@@ -54,6 +55,18 @@ namespace RestaurantMng.WebApplication.Controllers
             if (result.Code == 1)
             {
                 Session.Add(ConstCommon.USER_SESSION, (LoginDto)result.Data);
+
+                // set cookie
+                HttpCookie ck = System.Web.HttpContext.Current.Request.Cookies["USER_ID"];
+                if (ck == null)
+                {
+                    ck = new HttpCookie("USER_ID");
+                    ck.Values.Add("ID", ((LoginDto)result.Data).UserID.ToString());
+                }
+                else
+                {
+                    ck.Values.Set("ID", ((LoginDto)result.Data).UserID.ToString());
+                }
                 return View("Index");
             }
             else

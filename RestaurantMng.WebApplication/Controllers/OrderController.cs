@@ -12,7 +12,7 @@ using System.Web.Script.Serialization;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
-    [Authorization(Role = SystemRole.Phucvu)]
+    [Authorization(Role = SystemRole.Daubep)]
     [RoutePrefix("goi-mon")]
     public class OrderController : Controller
     {
@@ -124,7 +124,7 @@ namespace RestaurantMng.WebApplication.Controllers
                 Code = info.Code,
                 Message =info.Message
             };
-            RestaurantMngHub.SendUser("user1", new { id = "1", content = "update" });
+            RestaurantMngHub.SendUser(Helper.LoginUser().UserID.ToString(), new { id = "1", content = "đã thêm 1 hóa đơn" });
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
     }
