@@ -14,7 +14,8 @@ function showalert(msg, status) {
             sticky: false,
             theme: 'jnoty-danger',
             icon: 'fa fa-check-circle',
-            life: 3000
+            life: 3000,
+            position: 'bottom-right'
         });
     }
     else if (status === 1) {
@@ -23,7 +24,8 @@ function showalert(msg, status) {
             sticky: false,
             theme: 'jnoty-success',
             icon: 'fa fa-check-circle',
-            life: 5000
+            life: 5000,
+            position: 'bottom-right'
         });
     } else {
         $.jnoty(msg, {
@@ -31,7 +33,8 @@ function showalert(msg, status) {
             sticky: false,
             theme: 'jnoty-info',
             icon: 'fa fa-check-circle',
-            life: 5000
+            life: 5000,
+            position: 'bottom-right'
         });
     }
 }

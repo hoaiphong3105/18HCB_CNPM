@@ -209,13 +209,13 @@
     <Compile Include="Controllers\CashierController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
     <Compile Include="Controllers\MUserController.cs" />
-    <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModels\OrderVM.cs" />
+    <Compile Include="Models\ViewModels\OrderItemDetailVM.cs" />
     <Compile Include="Models\ViewModels\OrderOrderItemVM.cs" />
     <Compile Include="Models\ViewModels\TableVM.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
@@ -235,6 +235,7 @@
     <Content Include="Content\css\ionicons.min.css" />
     <Content Include="Content\css\skin-blue.min.css" />
     <Content Include="Content\dataTables.bootstrap.min.css" />
+    <Content Include="Content\datatable\jquery.dataTables.min.css" />
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\main-background.jpg" />
     <Content Include="Content\images\restaurant-background.jpg" />
@@ -276,6 +277,7 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />
+    <Content Include="Scripts\datatable\jquery.dataTables.min.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -320,6 +322,7 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Chef\Index.cshtml" />
+    <Content Include="Views\MUser\PartialListGroupUser.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

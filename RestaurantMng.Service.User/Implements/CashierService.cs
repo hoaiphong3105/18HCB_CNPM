@@ -165,9 +165,9 @@ namespace RestaurantMng.Service.Implements
                 var dataOrderItem = _cashierOrderItemRepository.FindAll();
 
                 res =
-                    from Order in dataOrder.ToList()
-                    join OrderItem in dataOrderItem.ToList() on Order.OrderId equals OrderItem.OrderId
-                    select new { Id = Order.OrderId, ItemId = OrderItem.OrderItemId, TableName = Order.TableList.TableName, Status = Order.Status};
+                    from Order in dataOrder
+                     join OrderItem in dataOrderItem on Order.OrderId equals OrderItem.OrderId
+                     select new { OrderId = Order.OrderId, ItemId = OrderItem.OrderItemId, TableName = Order.TableList.TableName, Status = Order.Status };
             }
             catch (Exception ex)
             {
@@ -175,6 +175,49 @@ namespace RestaurantMng.Service.Implements
                 result.Message = "Thất bại";
             }
 
+            return res;
+        }
+
+        public object GetDetailOrder(int id)
+        {
+            var result = new ResultModel<List<Data.Models.Order>>();
+            var res = new object();
+            try
+            {
+                var dataOrderItem = _cashierOrderItemRepository.FindAll();
+                var dataOrder = _cashierOrderRepository.FindAll();
+                res = dataOrder.Where(x => x.OrderId == id).Join(dataOrderItem,
+                        order => order.OrderId,
+                        orderItem => orderItem.OrderId,
+                        (order, orderItem) => new { OrderId = order.OrderId, ItemName = orderItem.Menu.Name, Note = orderItem.Note, TotalPrice = order.TotalPrice, Price = orderItem.Price, Status = orderItem.Status });
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Thất bại";
+            }
+
+            return res;
+        }
+
+        public bool ThanhToan(int id)
+        {
+            var result = new ResultModel<List<Data.Models.Order>>();
+            var res = false;
+            try
+            {
+                var dataOrder = _cashierOrderRepository.FindById(id);
+                dataOrder.Status = 0;
+                dataOrder.TableList.Status = 0;
+                _cashierOrderRepository.Update(dataOrder);
+
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Thất bại";
+            }
+            Save();
             return res;
         }
 
