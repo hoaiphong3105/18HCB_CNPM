@@ -21,6 +21,9 @@ namespace RestaurantMng.Data.Models
         public decimal Price { get; set; }
         public int Quantity { get; set; }
         public int Status { get; set; }
+        public Nullable<int> QuantityInProgress { get; set; }
+        public Nullable<int> QuantityCompleted { get; set; }
+        public Nullable<int> QuantityLate { get; set; }
     
         public virtual Menu Menu { get; set; }
         public virtual Order Order { get; set; }

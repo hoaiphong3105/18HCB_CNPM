@@ -24,6 +24,8 @@
         <AssociationConnector Association="RestaurantManagementModel.FK_Order_TableList" />
         <AssociationConnector Association="RestaurantManagementModel.FK_Order_User" />
         <AssociationConnector Association="RestaurantManagementModel.FK_OrderItem_Order" />
+        <EntityTypeShape EntityType="RestaurantManagementModel.ShiftWork" Width="1.5" PointX="9.375" PointY="3.875" />
+        <AssociationConnector Association="RestaurantManagementModel.FK_User_ShiftWork" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
