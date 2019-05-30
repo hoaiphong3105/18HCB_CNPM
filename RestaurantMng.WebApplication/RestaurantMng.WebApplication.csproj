@@ -54,6 +54,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.4.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.4.1\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
     </Reference>
@@ -74,8 +77,14 @@
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Reflection.Metadata, Version=1.4.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.1.6.0\lib\netstandard2.0\System.Reflection.Metadata.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
@@ -204,25 +213,22 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="Authorization\Authorization.cs" />
-    <Compile Include="Controllers\ChefController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CashierController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
     <Compile Include="Controllers\MUserController.cs" />
-    <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\PdfWriter.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\Summary.cs" />
     <Compile Include="Models\ViewModels\OrderItemDetailVM.cs" />
     <Compile Include="Models\ViewModels\OrderOrderItemVM.cs" />
     <Compile Include="Models\ViewModels\TableVM.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SignalR\ConnectionMapping.cs" />
-    <Compile Include="SignalR\RestaurantMngHub.cs" />
-    <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -242,6 +248,11 @@
     <Content Include="Content\images\user.png" />
     <Content Include="Content\ionicons.min.css" />
     <Content Include="Content\js\common.js" />
+    <Content Include="Content\plugins\bootstrap-datepicker\bootstrap-datepicker.css" />
+    <Content Include="Content\plugins\bootstrap-datepicker\bootstrap-datepicker.js" />
+    <Content Include="Content\plugins\bootstrap-datepicker\bootstrap-datepicker.min.css" />
+    <Content Include="Content\plugins\bootstrap-datepicker\bootstrap-datepicker.min.js" />
+    <Content Include="Content\plugins\bootstrap-datepicker\bootstrap-datepicker.vi.min.js" />
     <Content Include="Content\plugins\datatables.net-bs\dataTables.bootstrap.css" />
     <Content Include="Content\plugins\datatables.net-bs\dataTables.bootstrap.js" />
     <Content Include="Content\plugins\datatables.net-bs\dataTables.bootstrap.min.css" />
@@ -250,6 +261,7 @@
     <Content Include="Content\plugins\datatables.net\jquery.dataTables.min.js" />
     <Content Include="Content\plugins\jnoty\jnoty.css" />
     <Content Include="Content\plugins\jnoty\jnoty.js" />
+    <Content Include="Content\plugins\registration.css" />
     <Content Include="Content\plugins\select2\select2-bootstrap.css" />
     <Content Include="Content\plugins\select2\select2-bootstrap.min.css" />
     <Content Include="Content\plugins\select2\select2.css" />
@@ -273,6 +285,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\plugins\bootstrap-datepicker\bootstrap-datepicker.css.map" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\adminlte.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -324,9 +337,11 @@
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Chef\Index.cshtml" />
     <Content Include="Views\MUser\PartialListGroupUser.cshtml" />
+    <Content Include="Views\Cashier\Spending.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="SignalR\" />
     <Folder Include="Views\Manage\" />
   </ItemGroup>
   <ItemGroup>

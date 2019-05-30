@@ -205,45 +205,6 @@ namespace RestaurantMng.Service.User.Implements
             return result;
         }
 
-        public Data.Models.User GetUser(int id)
-        {
-            var user = _userRepository.FindById(id);
-            if(user != null)
-            {
-                return user;
-            }
-
-            return null;
-        }
-
-        public ResultModel<int> UpdateUser(Data.Models.User user)
-        {
-            var result = new ResultModel<int>();
-            try
-            {
-                var currUser = GetUser(user.ID);
-                
-                if(currUser != null)
-                {
-                    _userRepository.Update(user);
-                    _unitOfWork.Commit();
-
-                    result.Data = user.ID;
-                }
-                else
-                {
-                    result.Code = -2;
-                    result.Message = "Update nhân viên thất bại!";
-                }
-            }
-            catch (Exception ex)
-            {
-                result.Code = -2;
-                result.Message = "Update nhân viên thất bại!";
-            }
-            return result;
-        }
-
         /// <summary>
         /// Save
         /// </summary>

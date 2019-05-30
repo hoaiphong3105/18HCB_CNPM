@@ -1,8 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Order";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<link href="~/Content/plugins/select2/select2.min.css" rel="stylesheet" />
 <style type="text/css">
     input, textarea {
         outline: 0 !important;
@@ -22,414 +23,344 @@
         padding: 1px 10px;
         color: #fff;
     }
+
+    .qty .count {
+        color: #000;
+        display: inline-block;
+        vertical-align: top;
+        font-size: 17px;
+        font-weight: 500;
+        line-height: 20px;
+        padding: 0 2px;
+        min-width: 35px;
+        text-align: center;
+    }
+
+    .qty .plus {
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: top;
+        background-color: deepskyblue;
+        width: 20px;
+        height: 20px;
+        font: 20px/1 Arial,sans-serif;
+        text-align: center;
+        border-radius: 50%;
+    }
+
+    .qty .minus {
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: top;
+        background-color: deepskyblue;
+        width: 20px;
+        height: 20px;
+        font: 20px/1 Arial,sans-serif;
+        text-align: center;
+        border-radius: 50%;
+        background-clip: padding-box;
+    }
+
+    .minus:hover {
+        background-color: #717fe0 !important;
+    }
+
+    .plus:hover {
+        background-color: #717fe0 !important;
+    }
+    /*Prevent text selection*/
+    div.qty span {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+
+    div.qty input {
+        border: 0;
+        width: 2%;
+    }
+
+        div.qty nput::-webkit-outer-spin-button,
+        div.qty input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        div.qty input:disabled {
+            background-color: white;
+        }
 </style>
 
-<link href="~/Content/plugins/jnoty/jnoty.css" rel="stylesheet" />
-<div>
-    <!--Chọn bàn-->
-    <div class="box box-info">
-        <div class="box-header with-border">
-            <h3 class="box-title">Chọn bàn</h3>
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
-        </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <form class="form-horizontal">
-                <div class="form-group">
-                    <label class="col-md-3 control-label">Chọn bàn</label>
-                    <div class="col-md-5">
-                        <select id="drChonBan" class="form-control form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
-                            <option value="0" selected="selected" disabled="disabled">--Chọn bàn--</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-5 col-md-offset-3">
-                        <button type="button" id="btnTimThongTinBan" class="btn btn-primary">Tìm kiếm</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <!-- /.box-body -->
-    </div>
-
-    <!--Thông tin bàn ăn-->
-    <div class="box box-info">
-        <div class="box-header with-border">
-            <h3 class="box-title">Thông tin bàn ăn</h3>
-            <div class="box-tools pull-right">
-                <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                    <i class="fa fa-minus"></i>
-                </button>
-            </div>
-        </div>
-        <!-- /.box-header -->
-        <div class="box-body">
-            <div class="col-sm-12">
-                <div>
-                    <label for="surcharge" class="col-sm-2 control-label">Phụ phí</label>
-                    <div class="col-sm-4">
-                        <input type="number" class="form-control" id="surcharge">
-                    </div>
-                </div>
-                <div>
-                    <button type="button" id="btnThemMon" class="btn btn-primary pull-right">
-                        <i class="fa fa-plus"></i> Thêm món
-                    </button>
-                    <button type="button" hidden="hidden" class="btn btn-primary pull-right" id="btnSaveChange" style="margin-right:10px">
-                        <i class="fa fa-plus"></i> Lưu thay đổi
-                    </button>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="box-body table-responsive">
-                    <table class="table table-bordered table-hover" id="tbThongTinBan">
-                        <thead>
-                            <tr>
-                                <th>OrderItemId</th>
-                                <th>MenuId</th>
-                                <th>Tên món</th>
-                                <th>Số lượng</th>
-                                <th>Giá</th>
-                                <th>Tình trạng</th>
-                                <th>Ghi chú</th>
-                                <th>Chức năng</th>
-                            </tr>
-                        </thead>
-                        <tbody id="#example tbody"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <!-- /.box-body -->
-    </div>
-</div>
-
-<!--Modal thêm món-->
-<div class="modal fade" id="modal-default">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Thêm món ăn</h4>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Chọn món</label>
-                        <div class="col-md-9">
-                            <select id="drChonMon" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
-                                <option value="0" selected disabled="disabled">--Chọn món--</option>
-                            </select>
+<div class="row" style="margin:2px;">
+    <div class="nav-tabs-custom">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true"><i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Đồ ăn</a></li>
+            <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false"><i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Order</a></li>
+            <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-check"></i></a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_1">
+                <!--Tìm kiếm món ăn-->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Tìm kiếm</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Số lượng</label>
-                        <div class="col-md-9">
-                            <input id="SoLuongMon" type="number" class="form-control">
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Lọai</label>
+                                <div class="col-md-5">
+                                    <select class="form-control select2" multiple="multiple" data-placeholder="Select a State" style="width: 100%;">
+                                        <option>Đồ ăn</option>
+                                        <option>Đồ uống</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="inputEmail3" class="col-md-3 control-label">Tên món ăn</label>
+                                <div class="col-md-5">
+                                    <input type="text" class="form-control" id="inputEmail3" placeholder="Nhập tên đồ ăn hoặc đồ uống">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-5 col-md-offset-3">
+                                    <button type="button" class="btn btn-primary">Tìm kiếm</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+
+                <!--Danh sách món ăn-->
+                <div class="box box-info">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Danh sách món ăn</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                                <i class="fa fa-minus"></i>
+                            </button>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="col-md-3 control-label">Ghi chú</label>
-                        <div class="col-md-9">
-                            <input id="GhiChu" type="text" class="form-control">
-                        </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <form class="form-horizontal">
+                            <!--start-->
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>
+                                        <div class="col-md-8">
+                                            <label class="label-primary">Tên món 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>
+                                        <div class="col-md-8">
+                                            <label class="label-warning">Giá món 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Số lượng</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Yêu cầu thêm</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <button type="button" class="btn btn-primary" onclick="AddOrder(1)">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>
+                                        <div class="col-md-8">
+                                            <label class="label-primary">Tên món 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>
+                                        <div class="col-md-8">
+                                            <label class="label-warning">Giá món 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Số lượng</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Số lượng</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <button type="button" class="btn btn-primary">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>
+                                        <div class="col-md-8">
+                                            <label class="label-primary">Tên món 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>
+                                        <div class="col-md-8">
+                                            <label class="label-warning">Giá món 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Số lượng</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Số lượng</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <button type="button" class="btn btn-primary">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>
+                                        <div class="col-md-8">
+                                            <label class="label-primary">Tên món 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>
+                                        <div class="col-md-8">
+                                            <label class="label-warning">Giá món 1</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Số lượng</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="inputEmail3" class="col-md-4 control-label">Số lượng</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-8 col-md-offset-4">
+                                            <button type="button" class="btn btn-primary">Add</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--end-->
+                        </form>
                     </div>
-                    <input id="rowIndex" type="hidden" />
+                    <!-- /.box-body -->
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-danger pull-right" data-dismiss="modal">Hủy</button>
-                <button type="button" onclick="EditMenu()" id="btnUpdate" class="btn btn-primary" style="margin-right: 20px">Cập nhật</button>
-                <button type="button" onclick="AddMenu()" id="btnAdd" class="btn btn-primary" style="margin-right: 20px">Cập nhật</button>
+            <div class="tab-pane" id="tab_2">
+               <div class="row" id="order">
+
+               </div>
             </div>
         </div>
-        <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
+
 </div>
 
 @section scripts{
-    <link href="~/Content/plugins/datatables.net-bs/dataTables.bootstrap.min.css" rel="stylesheet" />
-    <script src="~/Content/plugins/datatables.net/jquery.dataTables.min.js"></script>
-    <script src="~/Content/plugins/datatables.net-bs/dataTables.bootstrap.min.js"></script>
-    <link href="~/Content/plugins/select2/select2.min.css" rel="stylesheet" />
-    <link href="~/Content/plugins/select2/select2-bootstrap.css" rel="stylesheet" />
     <script src="~/Content/plugins/select2/select2.min.js"></script>
-    <script src="~/Content/plugins/jnoty/jnoty.js"></script>
-    <script src="~/Content/js/common.js"></script>
     <script>
         $(document).ready(function () {
-            GetTables();
             $('.select2').select2();
-            GetAllMenu();
-            $('#btnSaveChange').hide();
-        });
 
-        // config table
-        var table = $('#tbThongTinBan').DataTable({
-            'paging': true,
-            'pageLength': 5,
-            'lengthChange': false,
-            'searching': false,
-            'ordering': false,
-            'info': false,
-            'autoWidth': true,
-            'responsive': true
-        });
-        table.columns([0, 1]).visible(false);
-        table.clear().draw();
-        $('.dataTables_empty').html('Không có dữ liệu');
-        // end config
-
-
-        $('#btnTimThongTinBan').on('click', function () {
-            var id = $('#drChonBan').val();
-            LayThongTinChiTietBan(id);
-        });
-
-        // cập nhât
-        $("#tbThongTinBan tbody").on('click', '.editButton', function (e) {
-            e.preventDefault();
-            var idx = $(this).closest('tr').index();
-            var dataRow = table.rows(idx).data();
-            var infoItem = {
-                orderItemId: dataRow[0][0],
-                menuId: dataRow[0][1],
-                Note: dataRow[0][6],
-                Quantity: dataRow[0][3],
-                Price: dataRow[0][4],
-                Status: dataRow[0][5],
-            };
-
-            $('#drChonMon').val(infoItem.menuId).trigger('change');
-            $('#SoLuongMon').val(infoItem.Quantity);
-            $('#GhiChu').val(infoItem.Note);
-            $('#rowIndex').val(idx);
-            $('#btnUpdate').show();
-            $('#btnAdd').hide();
-            $('#modal-default').modal('show');
-        });
-
-        // thêm mới
-        $('#btnThemMon').on('click', function () {
-            $('#drChonMon').val(0).trigger('change');
-            $('#SoLuongMon').val(0);
-            $('#GhiChu').val('');
-            $('#rowIndex').val('');
-            $('#btnUpdate').hide();
-            $('#btnAdd').show();
-
-            $('#modal-default').modal('show');
-        });
-
-        // save
-        $('#btnSaveChange').on('click', function () {
-            var data = [];
-            var form_data = table.rows().data();
-            $.each(form_data, function (key, value) {
-                var row = {
-                    orderItemId: value[0],
-                    menuId: value[1],
-                    menuName: value[2],
-                    quantity: value[3],
-                    note: value[6]
-                };
-                data.push(row);
+            $('.count').prop('disabled', true);
+            $(document).on('click', '.plus', function () {
+                $('.count').val(parseInt($('.count').val()) + 1);
             });
-            var info = {
-                surcharge: $('#surcharge').val(),
-                tableId: $('#drChonBan').val(),
-                orders: data
-            };
-
-            $.ajax({
-                url: '/Order/AddOrder',
-                method: "POST",
-                async: false,
-                dataType: "json",
-                contentType: "application/json",
-                data: JSON.stringify(info),
-                success: function (result) {
-                    showalert(result.Message, 2);
-                },
-                error: function (result, stt, msg) {
-                    showalert(msg, 0);
-                },
+            $(document).on('click', '.minus', function () {
+                $('.count').val(parseInt($('.count').val()) - 1);
+                if ($('.count').val() == 0) {
+                    $('.count').val(1);
+                }
             });
         });
-        // end save
 
-        // danh sách món ăn của table
-        function LayThongTinChiTietBan(id) {
-            table.clear().draw();
-            $('.dataTables_empty').html('Không có dữ liệu');
-            $.ajax({
-                url: '/Order/GetDetailInfoTable',
-                method: "POST",
-                async: false,
-                dataType: "json",
-                data: {
-                    idTable: id
-                },
-                success: function (result) {
-                    if (result == undefined || result == null || result == "") {
-                        showalert("Không có dữ liệu", 0);
-                        return;
-                    }
-                    if (result.Code == 1) {
-                        table.clear().draw();
-                        if (result.Data.length > 0) {
-                            $(result.Data).each(function () {
-                                table.row.add([
-                                    this.OrderItemId,
-                                    this.MenuId,
-                                    this.MenuName,
-                                    this.Quantity,
-                                    this.Price,
-                                    this.InProgress + "|" + this.Completed + "|" + this.Late,
-                                    this.Note,
-                                    '<button type="button" class="btn btn-default editButton"><i class="fa fa-edit"></i> Edit</button>'
-                                ]);
-                            });
-                            table.draw();
-                        }
-                        else {
-                            table.clear().draw();
-                            $('.dataTables_empty').html('Không có dữ liệu');
-                        }
-                    }
-                    else {
-                        showalert(result.Message, 0);
-                        return;
-                    }
-                },
-                error: function (result, stt, msg) {
-                    showalert(msg, 0);
-                },
-            });
-        }
+        function AddOrder(id) {
+            alert(id);
+            var html =
+                '<div class="col-md-4">' +
+                '<div class="form-group">' +
+                '<label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>' +
+                '<div class="col-md-8">' +
+                '<label class="label-primary">Tên món 1</label>' +
+                '</div>' +
+                '</div>' +
 
-        // lấy danh sách món ăn
-        function GetAllMenu() {
-            $.ajax({
-                url: '/Order/GetAllMenu',
-                method: "POST",
-                dataType: "json",
-                async: false,
-                data: {},
-                success: function (result) {
-                    if (result == undefined || result == null || result == "") {
-                        showalert("Không có dữ liệu", 0);
-                        return;
-                    }
+                '<div class="form-group">' +
+                '<label for="inputEmail3" class="col-md-4 control-label">Tên món ăn</label>' +
+                '<div class="col-md-8">' +
+                '<label class="label-warning">Giá món 1</label>' +
+                '</div>' +
+                '</div>' +
 
-                    if (result.Code == 1) {
-                        if (result.Data.length > 0) {
-                            var data = [];
-                            $(result.Data).each(function () {
-                                data.push({
-                                    id: this.Id,
-                                    text: this.Name,
-                                    price: this.Price,
-                                });
-                            });
-                            $("#drChonMon").select2({
-                                data: data,
-                                width: "100%"
-                            });
-                        }
-                    } else {
-                        showalert(result.Message, 0);
-                        return;
-                    }
-                },
-                error: function (result, stt, msg) {
-                    showalert(msg, 0);
-                },
-            });
-        }
+                '<div class="form-group">' +
+                '<label for="inputEmail3" class="col-md-4 control-label">Số lượng</label>' +
+                '<div class="col-md-8">' +
+                '<input type="text" class="form-control" id="inputEmail3" placeholder="Số lượng">' +
+                '</div>' +
+                '</div>' +
 
-        // thêm món ăn
-        function AddMenu() {
-            $('#btnSaveChange').show();
-            var menuSelected = $('#drChonMon').select2('data')[0];
-            table.row.add([
-                0,
-                menuSelected.id,
-                menuSelected.text,
-                $('#SoLuongMon').val(),
-                menuSelected.price,
-                '0|0|0',
-                $('#GhiChu').val(),
-                '<button type="button" class="btn btn-default editButton"><i class="fa fa-edit"></i> Edit</button>'
-            ]);
-            table.draw();
-        }
-
-        // cập nhật món ăn
-        function EditMenu() {
-            $('#btnSaveChange').show();
-            var idx = $('#rowIndex').val();
-            var dataRow = table.rows(idx).data();
-            var menuSelected = $('#drChonMon').select2('data')[0];
-            var newData = [
-                dataRow[0][0],
-                menuSelected.id,
-                menuSelected.text,
-                $('#SoLuongMon').val(),
-                menuSelected.price,
-                dataRow[0][5],
-                $('#GhiChu').val(),
-                '<button type="button" class="btn btn-default editButton"><i class="fa fa-edit"></i> Edit</button>'
-            ];
-            table.row(idx).data(newData).draw();
-        }
-
-        // lấy danh sách bàn
-        function GetTables() {
-            $.ajax({
-                url: '/Order/GetTables',
-                method: "POST",
-                dataType: "json",
-                async: false,
-                data: {},
-                success: function (result) {
-                    if (result == undefined || result == null || result == "") {
-                        showalert("Không có dữ liệu", 0);
-                        return;
-                    }
-
-                    if (result.Code == 1) {
-                        if (result.Data.length > 0) {
-                            var data = [];
-                            $(result.Data).each(function () {
-                                data.push({
-                                    id: this.Id,
-                                    text: this.Name
-                                });
-                            });
-                            $("#drChonBan").select2({
-                                data: data,
-                                width: "100%"
-                            });
-                        }
-                    } else {
-                        showalert(result.Message, 0);
-                        return;
-                    }
-                },
-                error: function (result, stt, msg) {
-                    showalert(msg, 0);
-                },
-            })
+                '<div class="form-group">' +
+                '<div class="col-md-8 col-md-offset-4">' +
+                '<button type="button" class="btn btn-primary">Add</button>' +
+                '</div>' +
+                '</div>' +
+                '</div>';
+            $('#order').append(html);
+            $(this).attr('disabled');
         }
     </script>
 }

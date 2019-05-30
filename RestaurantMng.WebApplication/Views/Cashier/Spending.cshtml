@@ -6,72 +6,21 @@
 }
 
 @section style{
-    <style>
-        /*--CSS--*/
-        .block {
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        .circle {
-            background: orange;
-            border-radius: 200px;
-            color: white;
-            height: 200px;
-            font-weight: bold;
-            width: 200px;
-            display: table;
-            margin: 20px auto;
-        }
-
-            .circle p {
-                vertical-align: middle;
-                display: table-cell;
-            }
-
-        .divshow {
-            position: absolute;
-            z-index: 1;
-        }
-
-        .btn-group {
-            position: relative;
-        }
-
-        .modal {
-            text-align: center;
-        }
-
-        @@media screen and (min-width: 768px) {
-            .modal:before {
-                display: inline-block;
-                vertical-align: middle;
-                content: " ";
-                height: 100%;
-            }
-        }
-
-        .modal-dialog {
-            display: inline-block;
-            text-align: left;
-            vertical-align: middle;
-        }
-
-        /*.test:after {
-            content: '\2807';
-            font-size: 30px;
-            color: black;
-            position: absolute;
-        }*/
-
-
-    </style>
+    <link href="~/Content/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css" rel="stylesheet" />
 }
 
 @section scripts{
+    <script src="~/Content/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             loading();
+
+    $('#datepickerTuNgay').datepicker({
+        autoclose: true
+    })
+            $('#datepickerDenNgay').datepicker({
+        autoclose: true
+    })
         });
 
         $(function () {
@@ -140,20 +89,52 @@
                 }
             });
         };
-
-        $('#ThanhToan').click(function (e) {
+         $('#SummaryType').change(function() {
+        $('#sumType').val($(this).val());
+      //here u can get the selected batch ID
+      //pass the batch ID to controller by using ajax request
+    });
+        $('#frmSummary').submit(function (e) {
 
             e.preventDefault(); // avoid to execute the actual submit of the form.
-            $('#myModal').modal('hide');
+
+            alert('bam roi');
+
+            var from = $('#datepickerTuNgay').datepicker('getDate');
+            var to = $('#datepickerDenNgay').datepicker('getDate');
+            var type = $('#SummaryType option:selected').val();
+
+
+       //     $('#myModal').modal('hide');
             $.ajax({
-                type: $(this).attr('method'),
-                url: $(this).attr('action'),
-                //data: form.serialize(), // serializes the form's elements.
-                data: { 'orderId': $('#ThanhToan').data('orderid') },
-                cache: false,
+                type: 'Post',
+            //    url: $(this).attr('action'),
+                url: '@Url.Action("Summary", "Cashier")',
+            //    data: $(this).serialize(), // serializes the form's elements.
+                data: { 'fromDate': from.toISOString(), 'toDate': to.toISOString(), 'type': type },
+
                 success: function (response) {
-                    showalert(response.message, 1);
-                    func2(response.orderId, response.tableName);
+                    $('#SummaryResult tr').empty();
+                    var index = 1;
+                    $('#SummaryResult').append(`<tr>
+                                    <th">STT</th>
+                                    <th">Lý do</th>
+                                    <th">Thời gian</th>
+                                    <th">Tiền</th>
+                                    <th">Loại</th>
+                                </tr>`);
+                    $.each(response, function (index, item) {
+                        $('#SummaryResult').append(`
+                                <tr>
+                                    <td>${index}</td>
+                                    <td>${item.Reason}</td>
+                                    <td>${item.Date}</td>
+                                    <td>${item.TotalPrice} vnđ</td>
+                                    <td>${item.Type}</td>
+                                </tr>
+                                `);
+                        index = index + 1;
+                    });
                 },
                 failure: function (response) {
                     showalert('failure', 0);
@@ -192,7 +173,7 @@
     </div>*@
 <div id="myModal" class="modal fade">
     <div class="modal-dialog modal-lg" style="max-width: 800px; min-width: 200px">
-        <form id="DetailOrder" action="@Url.Action("TinhTien", "Cashier")" method="post">
+        <form id="DetailOrder" action="@Url.Action("TinhTien", "Cashier")" method="get">
             <div class="modal-content">
 
                 <!-- Header -->
@@ -231,17 +212,48 @@
     </div>
 </div>
 <div class="jumbotron text-center">
-    <h2>DANH SÁCH BÀN ĂN ĐANG PHỤC VỤ</h2>
+    <h2>THỐNG KÊ THU CHI</h2>
 </div>
-
 <div class="row">
-
-    @foreach (var item in Model)
-    {
-        <div class="col-md-4 block">
-            <div id="slide-div" class="circle" data-orderid="@item.OrderId" action="@Url.Action("DetailOrder", "Cashier", new { tableId = item.TableId, orderId = item.OrderId})" method="post">
-                <p>@item.TableName</p>
+    <form id="frmSummary">
+        <div class="form-group col-md-12">
+            <label class="col-md-3 control-label">Loại</label>
+            <input type="hidden" id="sumType" value="" />
+            <div class="col-md-9">
+                <select class="form-control select2" multiple="multiple" name="type" id="SummaryType" data-placeholder="Select a State" style="width: 100%;" id="drLoaidichvu">
+                    <option value="1" selected="selected">Tất cả</option>
+                    <option value="2">Chi tiền lương</option>
+                    <option value="3">Chi tiền thực phẩm</option>
+                    <option value="4">Thu</option>
+                </select>
             </div>
         </div>
-    }
+        <div class="form-group col-md-12">
+            <label class="col-md-3 control-label">Từ ngày</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" name="fromDate" id="datepickerTuNgay" placeholder="[Từ ngày]">
+                @*<div class="input-group date" id="DOB">
+                        <div class="input-group-addon">
+                            <i class="fa fa-calendar"></i>
+                        </div>
+                        <input type="text" class="form-control pull-right" id="datepicker">
+                    </div>*@
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-md-3 control-label">Đến ngày</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" name="toDate" id="datepickerDenNgay" placeholder="[Đến ngày]">
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            <label class="col-md-3 control-label"></label>
+            <div class="col-md-9">
+                <button type="submit" class="btn btn-success">Xem</button>
+            </div>
+        </div>
+    </form>
+    <div class="form-group col-md-12">
+        <table id="SummaryResult" class="table table-striped" style="width:90%; border: solid"></table>
+    </div>
 </div>

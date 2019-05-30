@@ -50,15 +50,6 @@ namespace RestaurantMng.Service.User.Interfaces
         ResultModel<NullModel> RemoveUser(int id);
 
         /// <summary>
-        /// Get User
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Data.Models.User GetUser(int id);
-
-        ResultModel<int> UpdateUser(Data.Models.User user);
-
-        /// <summary>
         /// SaveChanges
         /// </summary>
         void Save();

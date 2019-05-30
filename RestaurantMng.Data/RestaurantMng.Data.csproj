@@ -97,9 +97,6 @@
     <Compile Include="Models\SpendingMoney.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\sysdiagram.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\TableList.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
