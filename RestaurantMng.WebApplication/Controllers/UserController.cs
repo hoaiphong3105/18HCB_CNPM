@@ -65,6 +65,18 @@ namespace RestaurantMng.WebApplication.Controllers
         }
 
         /// <summary>
+        /// GET: Logout
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("dang-xuat")]
+        public ActionResult Logout()
+        {
+            Session.Remove(ConstCommon.USER_SESSION);
+            return View("Login");
+        }
+
+        /// <summary>
         /// Thêm mới nhân viên
         /// </summary>
         /// <returns></returns>

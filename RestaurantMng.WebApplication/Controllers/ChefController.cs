@@ -1,4 +1,6 @@
-﻿using RestaurantMng.Service.User.Interfaces;
+﻿using RestaurantMng.Core.Common;
+using RestaurantMng.Service.User.Interfaces;
+using RestaurantMng.WebApplication.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +9,8 @@ using System.Web.Mvc;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
+    [Authorization(Role = SystemRole.Daubep)]
+    [RoutePrefix("dau-bep")]
     public class ChefController : Controller
     {
         private readonly IOrderService _iOrderService;
@@ -21,6 +25,7 @@ namespace RestaurantMng.WebApplication.Controllers
         }
 
         // GET: Chef
+        [Route("danh-sach-mon-an")]
         public ActionResult Index()
         {
             return View();

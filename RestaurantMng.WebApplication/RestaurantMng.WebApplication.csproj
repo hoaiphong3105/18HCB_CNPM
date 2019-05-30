@@ -239,6 +239,7 @@
     <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\images\main-background.jpg" />
     <Content Include="Content\images\restaurant-background.jpg" />
+    <Content Include="Content\images\user.png" />
     <Content Include="Content\ionicons.min.css" />
     <Content Include="Content\js\common.js" />
     <Content Include="Content\plugins\datatables.net-bs\dataTables.bootstrap.css" />

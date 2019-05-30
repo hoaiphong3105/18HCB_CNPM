@@ -1,4 +1,5 @@
-﻿using RestaurantMng.Service.User.Interfaces;
+﻿using RestaurantMng.Core.Common;
+using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.Service.User.Models.Request;
 using RestaurantMng.WebApplication.Authorization;
 using RestaurantMng.WebApplication.SignalR;
@@ -11,6 +12,8 @@ using System.Web.Script.Serialization;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
+    [Authorization(Role = SystemRole.Phucvu)]
+    [RoutePrefix("goi-mon")]
     public class OrderController : Controller
     {
         private readonly IOrderService _iOrderService;
@@ -27,6 +30,7 @@ namespace RestaurantMng.WebApplication.Controllers
         }
 
         // GET: Order
+        [Route("")]
         public ActionResult Index()
         {
             return View();
