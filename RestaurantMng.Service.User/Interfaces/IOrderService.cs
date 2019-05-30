@@ -29,5 +29,19 @@ namespace RestaurantMng.Service.User.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         ResultModel<List<NullModel>> Order(OrderReq model);
+
+        /// <summary>
+        /// Lấy danh sách món ăn đã order dùng cho đầu bếp
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        ResultModel<List<Data.Models.OrderItem>> GetOrderItems();
+
+        /// <summary>
+        /// cập nhật trạng thái
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        ResultModel<List<NullModel>> UpdateStatus(int orderItemId,int menuId, int inprogress, int completed, int late);
     }
 }

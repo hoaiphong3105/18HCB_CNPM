@@ -5,7 +5,9 @@ namespace RestaurantMng.Service.User.Models.Request
     public class OrderReq
     {
         public List<OrderReq_Item> orders { get; set; }
-        public string tableId { get; set; }
+        public int tableId { get; set; }
+        public int servantId { get; set; }
+        public int surcharge { get; set; }
     }
     public class OrderReq_Item
     {

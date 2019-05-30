@@ -3,6 +3,27 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<style type="text/css">
+    input, textarea {
+        outline: 0 !important;
+        border-width: 0 0 1px !important;
+        border-color: lightskyblue !important;
+    }
+
+    .select2-selection {
+        outline: 0 !important;
+        border-width: 0 0 1px !important;
+        border-color: lightskyblue !important;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: deepskyblue;
+        border-color: #367fa9;
+        padding: 1px 10px;
+        color: #fff;
+    }
+</style>
+
 <link href="~/Content/plugins/jnoty/jnoty.css" rel="stylesheet" />
 <div>
     <!--Chọn bàn-->
@@ -21,8 +42,8 @@
                 <div class="form-group">
                     <label class="col-md-3 control-label">Chọn bàn</label>
                     <div class="col-md-5">
-                        <select id="drChonBan" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
-                            <option value="0" selected="selected">--Chọn bàn--</option>
+                        <select id="drChonBan" class="form-control form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                            <option value="0" selected="selected" disabled="disabled">--Chọn bàn--</option>
                         </select>
                     </div>
                 </div>
@@ -50,12 +71,20 @@
         <!-- /.box-header -->
         <div class="box-body">
             <div class="col-sm-12">
-                <button type="button" id="btnThemMon" class="btn btn-primary pull-right">
-                    <i class="fa fa-plus"></i> Thêm món
-                </button>
-                <button type="button" class="btn btn-primary pull-right" id="btnSaveChange" style="margin-right:10px">
-                    <i class="fa fa-plus"></i> Lưu thay đổi
-                </button>
+                <div>
+                    <label for="surcharge" class="col-sm-2 control-label">Phụ phí</label>
+                    <div class="col-sm-4">
+                        <input type="number" class="form-control" id="surcharge">
+                    </div>
+                </div>
+                <div>
+                    <button type="button" id="btnThemMon" class="btn btn-primary pull-right">
+                        <i class="fa fa-plus"></i> Thêm món
+                    </button>
+                    <button type="button" hidden="hidden" class="btn btn-primary pull-right" id="btnSaveChange" style="margin-right:10px">
+                        <i class="fa fa-plus"></i> Lưu thay đổi
+                    </button>
+                </div>
             </div>
             <div class="col-sm-12">
                 <div class="box-body table-responsive">
@@ -141,6 +170,7 @@
             GetTables();
             $('.select2').select2();
             GetAllMenu();
+            $('#btnSaveChange').hide();
         });
 
         // config table
@@ -215,7 +245,8 @@
                 data.push(row);
             });
             var info = {
-                tableId: $('drChonBan').val(),
+                surcharge: $('#surcharge').val(),
+                tableId: $('#drChonBan').val(),
                 orders: data
             };
 
@@ -227,7 +258,7 @@
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (result) {
-                    alert('ssucess');
+                    showalert(result.Message, 2);
                 },
                 error: function (result, stt, msg) {
                     showalert(msg, 0);
@@ -328,6 +359,7 @@
 
         // thêm món ăn
         function AddMenu() {
+            $('#btnSaveChange').show();
             var menuSelected = $('#drChonMon').select2('data')[0];
             table.row.add([
                 0,
@@ -344,6 +376,7 @@
 
         // cập nhật món ăn
         function EditMenu() {
+            $('#btnSaveChange').show();
             var idx = $('#rowIndex').val();
             var dataRow = table.rows(idx).data();
             var menuSelected = $('#drChonMon').select2('data')[0];

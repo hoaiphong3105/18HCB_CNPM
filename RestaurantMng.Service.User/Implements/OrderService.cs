@@ -78,6 +78,26 @@ namespace RestaurantMng.Service.User.Implements
         /// <summary>
         /// 
         /// </summary>
+        /// <returns></returns>
+        public ResultModel<List<Data.Models.OrderItem>> GetOrderItems()
+        {
+            var result = new ResultModel<List<Data.Models.OrderItem>>();
+            try
+            {
+                result.Data = _orderItemRepository.FindAll(x => x.Status != 0).ToList();
+            }
+            catch(Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Thất bại";
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
         public ResultModel<List<NullModel>> Order(OrderReq model)
@@ -85,9 +105,76 @@ namespace RestaurantMng.Service.User.Implements
             var result = new ResultModel<List<NullModel>>();
             try
             {
+                var orderExist = _orderRepository.FindAll(x => x.TableId == model.tableId && x.Status == 1).FirstOrDefault();
+                // nếu tồn tại => cập nhật
+                if (orderExist != null)
+                {
+                    var orderItems = new List<Data.Models.OrderItem>();
 
+                    // item thêm mới
+                    var newItems = model.orders.Where(x => x.orderItemId == 0);
+                    foreach (var item in newItems)
+                    {
+                        var orderItem = new Data.Models.OrderItem();
+                        orderItem.MeniItemId = item.menuId;
+                        orderItem.Note = item.note;
+                        orderItem.Price = _menuRepository.FindById(item.menuId).Price;
+                        orderItem.Quantity = item.quantity;
+                        orderItem.Status = 1;
+                        orderItems.Add(orderItem);
+                    }
+                    // item update
+                    var itemUpdates = model.orders.Where(x => x.orderItemId != 0);
+                    foreach (var item in itemUpdates)
+                    {
+                        var orderItem = _orderItemRepository.FindById(item.orderItemId);
+                        orderItem.MeniItemId = item.menuId;
+                        orderItem.Note = item.note;
+                        orderItem.Price = _menuRepository.FindById(item.menuId).Price;
+                        orderItem.Quantity = item.quantity;
+                        orderItems.Add(orderItem);
+                    }
+                    orderExist.OrderItems = orderItems;
+
+                    _orderRepository.Update(orderExist);
+                    _unitOfWork.Commit();
+
+                }
+                else // thêm mới
+                {
+                    var order = new Data.Models.Order();
+                    order.Status = 1;
+                    order.OrderTime = DateTime.Now;
+                    order.ServantId = model.servantId;
+                    order.TableId = model.tableId;
+
+                    var orderItems = new List<Data.Models.OrderItem>();
+                    foreach (var item in model.orders)
+                    {
+                        if (item.quantity > 0)
+                        {
+                            var orderItem = new Data.Models.OrderItem();
+                            orderItem.MeniItemId = item.menuId;
+                            orderItem.Note = item.note;
+                            orderItem.Price = _menuRepository.FindById(item.menuId).Price;
+                            orderItem.Quantity = item.quantity;
+                            orderItem.Status = 1;
+                            orderItem.QuantityCompleted = 0;
+                            orderItem.QuantityInProgress = 0;
+                            orderItem.QuantityLate = 0;
+                            orderItems.Add(orderItem);
+                        }
+                    }
+                    order.OrderItems = orderItems;
+
+                    if (orderItems.Count > 0)
+                    {
+                        _orderRepository.Add(order);
+                        _unitOfWork.Commit();
+                    }
+                }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.Code = -2;
                 result.Message = "Thất bại";
@@ -101,6 +188,32 @@ namespace RestaurantMng.Service.User.Implements
         public void Save()
         {
             _unitOfWork.Commit();
+        }
+
+        /// <summary>
+        /// Cập nhật trạng thái
+        /// </summary>
+        /// <returns></returns>
+        public ResultModel<List<NullModel>> UpdateStatus(int orderItemId, int menuId,int inprogress, int completed, int late)
+        {
+            var result = new ResultModel<List<NullModel>>();
+            try
+            {
+                var orderItem = _orderItemRepository.FindById(orderItemId);
+                orderItem.QuantityInProgress = inprogress;
+                orderItem.QuantityCompleted = completed;
+                orderItem.QuantityLate = late;
+
+                _orderItemRepository.Update(orderItem);
+                _unitOfWork.Commit();
+            }
+            catch(Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Thất bại";
+            }
+
+            return result;
         }
     }
 }

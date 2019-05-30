@@ -215,7 +215,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\ViewModels\OrderVM.cs" />
     <Compile Include="Models\ViewModels\OrderItemDetailVM.cs" />
     <Compile Include="Models\ViewModels\OrderOrderItemVM.cs" />
     <Compile Include="Models\ViewModels\TableVM.cs" />

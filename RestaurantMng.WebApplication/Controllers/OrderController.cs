@@ -1,6 +1,6 @@
 ﻿using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.Service.User.Models.Request;
-using RestaurantMng.WebApplication.Models.ViewModels;
+using RestaurantMng.WebApplication.Authorization;
 using RestaurantMng.WebApplication.SignalR;
 using System;
 using System.Collections.Generic;
@@ -82,6 +82,10 @@ namespace RestaurantMng.WebApplication.Controllers
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult GetAllMenu()
         {
@@ -100,12 +104,22 @@ namespace RestaurantMng.WebApplication.Controllers
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult AddOrder(OrderReq model)
         {
+            model.servantId = Helper.LoginUser().UserID;
             var info = _iOrderService.Order(model);
 
-            var obj = new object();
+            var obj = new
+            {
+                Code = info.Code,
+                Message =info.Message
+            };
             RestaurantMngHub.SendUser("user1", new { id = "1", content = "update" });
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
