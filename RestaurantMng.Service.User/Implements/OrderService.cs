@@ -84,9 +84,9 @@ namespace RestaurantMng.Service.User.Implements
             var result = new ResultModel<List<Data.Models.OrderItem>>();
             try
             {
-                result.Data = _orderItemRepository.FindAll(x => x.Status != 0).ToList();
+                result.Data = _orderItemRepository.FindAll(x => x.Status == 1 || x.Status == 3).ToList();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 result.Code = -2;
                 result.Message = "Thất bại";
@@ -194,15 +194,13 @@ namespace RestaurantMng.Service.User.Implements
         /// Cập nhật trạng thái
         /// </summary>
         /// <returns></returns>
-        public ResultModel<List<NullModel>> UpdateStatus(int orderItemId, int menuId,int inprogress, int completed, int late)
+        public ResultModel<List<NullModel>> UpdateStatus(int orderItemId, int status)
         {
             var result = new ResultModel<List<NullModel>>();
             try
             {
                 var orderItem = _orderItemRepository.FindById(orderItemId);
-                orderItem.QuantityInProgress = inprogress;
-                orderItem.QuantityCompleted = completed;
-                orderItem.QuantityLate = late;
+                orderItem.Status = status;
 
                 _orderItemRepository.Update(orderItem);
                 _unitOfWork.Commit();

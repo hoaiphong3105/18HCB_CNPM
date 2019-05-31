@@ -50,9 +50,7 @@ namespace RestaurantMng.WebApplication.Controllers
                     MenuName = x.Menu.Name,
                     Note= x.Note,
                     Quantity =x.Quantity,
-                    Completed = x.QuantityCompleted,
-                    InProgress = x.QuantityInProgress,
-                    QuantityLate= x.QuantityLate,
+                    Status = x.Status,
                 }).ToList(),
             };
             return Json(obj, JsonRequestBehavior.AllowGet);
@@ -63,9 +61,9 @@ namespace RestaurantMng.WebApplication.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public JsonResult UpdateStatus(int orderItemId, int menuId, int inprogress, int completed,int late)
+        public JsonResult UpdateStatus(int orderItemId, int status)
         {
-            var orderItems = _iOrderService.UpdateStatus(orderItemId, menuId,inprogress, completed, late);
+            var orderItems = _iOrderService.UpdateStatus(orderItemId, status);
             var obj = new
             {
                 Code = orderItems.Code,

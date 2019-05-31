@@ -79,9 +79,7 @@ namespace RestaurantMng.WebApplication.Controllers
                     Note = x.Note,
                     Price = x.Price,
                     Quantity = x.Quantity,
-                    InProgress = x.QuantityInProgress,
-                    Completed = x.QuantityCompleted,
-                    Late = x.QuantityLate,
+                    Status = x.Status == 1 ? "Đang xử lý" : x.Status == 2 ? "Hoàn thành" : "Trễ",
                 }).ToList(),
             };
             return Json(obj, JsonRequestBehavior.AllowGet);
@@ -125,7 +123,6 @@ namespace RestaurantMng.WebApplication.Controllers
                 Code = info.Code,
                 Message =info.Message
             };
-            //RestaurantMngHub.SendUser(Helper.LoginUser().Role, new { id = "1", content = "đã thêm 1 hóa đơn" });
             var hub = GlobalHost.ConnectionManager.GetHubContext<RestaurantMngHub>();
             hub.Clients.All.Send2("Đã thêm");
             return Json(obj, JsonRequestBehavior.AllowGet);

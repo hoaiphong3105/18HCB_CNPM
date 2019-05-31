@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Gọi món";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <style type="text/css">
@@ -21,6 +21,13 @@
         border-color: #367fa9;
         padding: 1px 10px;
         color: #fff;
+    }
+
+    .btn-default {
+        border: none !important;
+        padding: 2px !important;
+        background: none !important;
+        margin-left: 10px !important;
     }
 </style>
 
@@ -74,7 +81,7 @@
                 <div>
                     <label for="surcharge" class="col-sm-2 control-label">Phụ phí</label>
                     <div class="col-sm-4">
-                        <input type="number" class="form-control" id="surcharge">
+                        <input type="number" min="0" value="0" class="form-control" id="surcharge">
                     </div>
                 </div>
                 <div>
@@ -133,13 +140,13 @@
                     <div class="form-group">
                         <label class="col-md-3 control-label">Số lượng</label>
                         <div class="col-md-9">
-                            <input id="SoLuongMon" type="number" class="form-control">
+                            <input id="SoLuongMon" type="number"min="1" value="1" class="form-control">
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-md-3 control-label">Ghi chú</label>
                         <div class="col-md-9">
-                            <input id="GhiChu" type="text" class="form-control">
+                            <input id="GhiChu" type="text" value="không có" class="form-control">
                         </div>
                     </div>
                     <input id="rowIndex" type="hidden" />
@@ -171,6 +178,7 @@
             $('.select2').select2();
             GetAllMenu();
             $('#btnSaveChange').hide();
+            $('#btnThemMon').hide();
         });
 
         // config table
@@ -192,7 +200,13 @@
 
         $('#btnTimThongTinBan').on('click', function () {
             var id = $('#drChonBan').val();
-            LayThongTinChiTietBan(id);
+            if (id == 0 || id == null) {
+                showalert("Chọn bàn", 2);
+            }
+            else {
+                LayThongTinChiTietBan(id);
+                $('#btnThemMon').show();
+            }
         });
 
         // cập nhât
@@ -218,11 +232,19 @@
             $('#modal-default').modal('show');
         });
 
+        // xóa
+        $("#tbThongTinBan tbody").on('click', '.removeButton', function (e) {
+            e.preventDefault();
+            var idx = $(this).closest('tr').index();
+            table.row(idx).remove().draw();
+            showalert("Xóa thành công", 1);
+        });
+
         // thêm mới
         $('#btnThemMon').on('click', function () {
             $('#drChonMon').val(0).trigger('change');
-            $('#SoLuongMon').val(0);
-            $('#GhiChu').val('');
+            $('#SoLuongMon').val(1);
+            $('#GhiChu').val('không có');
             $('#rowIndex').val('');
             $('#btnUpdate').hide();
             $('#btnAdd').show();
@@ -232,6 +254,12 @@
 
         // save
         $('#btnSaveChange').on('click', function () {
+            var id = $('#drChonBan').val();
+            if (id == 0 || id == null) {
+                showalert("Chọn bàn", 2);
+                return;
+            }
+          
             var data = [];
             var form_data = table.rows().data();
             $.each(form_data, function (key, value) {
@@ -240,6 +268,7 @@
                     menuId: value[1],
                     menuName: value[2],
                     quantity: value[3],
+                    status: 1,
                     note: value[6]
                 };
                 data.push(row);
@@ -258,6 +287,23 @@
                 contentType: "application/json",
                 data: JSON.stringify(info),
                 success: function (result) {
+                    if (result.Code == 1) {
+                        $.each(form_data, function (key, value) {
+                            // reload
+                            var newData = [
+                                value[0],
+                                value[1],
+                                value[2],
+                                value[3],
+                                value[4],
+                                value[5],
+                                value[6],
+                                '<button type="button" disabled style="margin-right:10px" class="btn btn-default editButton"><i class="fa fa-edit"></i></button>'
+                                + '<button type="button" disabled class="btn btn-default"><i class="fa fa-trash"></i></button>'
+                            ];
+                            table.row(key).data(newData).draw();
+                        });
+                    }
                     showalert(result.Message, 2);
                 },
                 error: function (result, stt, msg) {
@@ -269,8 +315,10 @@
 
         // danh sách món ăn của table
         function LayThongTinChiTietBan(id) {
+            table.columns([0, 1]).visible(false);
             table.clear().draw();
             $('.dataTables_empty').html('Không có dữ liệu');
+
             $.ajax({
                 url: '/Order/GetDetailInfoTable',
                 method: "POST",
@@ -294,9 +342,10 @@
                                     this.MenuName,
                                     this.Quantity,
                                     this.Price,
-                                    this.InProgress + "|" + this.Completed + "|" + this.Late,
+                                    this.Status,
                                     this.Note,
-                                    '<button type="button" class="btn btn-default editButton"><i class="fa fa-edit"></i> Edit</button>'
+                                    '<button type="button" disabled style="margin-right:10px" class="btn btn-default editButton"><i class="fa fa-edit"></i> </button>' +
+                                    '<button type="button" disabled class="btn btn-default"><i class="fa fa-trash"></i></button>'
                                 ]);
                             });
                             table.draw();
@@ -361,17 +410,23 @@
         function AddMenu() {
             $('#btnSaveChange').show();
             var menuSelected = $('#drChonMon').select2('data')[0];
+            if (menuSelected.id == 0 || menuSelected.id == null) {
+                showalert("Chọn món", 2);
+                return;
+            }
             table.row.add([
                 0,
                 menuSelected.id,
                 menuSelected.text,
                 $('#SoLuongMon').val(),
                 menuSelected.price,
-                '0|0|0',
+                'Đang xử lý',
                 $('#GhiChu').val(),
-                '<button type="button" class="btn btn-default editButton"><i class="fa fa-edit"></i> Edit</button>'
+                '<button type="button" style="margin-right:10px" class="btn btn-default editButton"><i class="fa fa-edit"></i></button>'
+                + '<button type="button" class="btn btn-default removeButton"><i class="fa fa-trash"></i></button>'
             ]);
             table.draw();
+            showalert("Thêm thành công", 2);
         }
 
         // cập nhật món ăn
@@ -380,6 +435,10 @@
             var idx = $('#rowIndex').val();
             var dataRow = table.rows(idx).data();
             var menuSelected = $('#drChonMon').select2('data')[0];
+            if (menuSelected.id == 0 || menuSelected.id == null) {
+                showalert("Chọn món", 2);
+                return;
+            }
             var newData = [
                 dataRow[0][0],
                 menuSelected.id,
@@ -388,9 +447,11 @@
                 menuSelected.price,
                 dataRow[0][5],
                 $('#GhiChu').val(),
-                '<button type="button" class="btn btn-default editButton"><i class="fa fa-edit"></i> Edit</button>'
+                '<button type="button" style="margin-right:10px" class="btn btn-default editButton"><i class="fa fa-edit"></i></button>' 
+                + '<button type="button" class="btn btn-default removeButton"><i class="fa fa-trash"></i></button>'
             ];
             table.row(idx).data(newData).draw();
+            showalert("Cập nhật thành công", 2);
         }
 
         // lấy danh sách bàn
