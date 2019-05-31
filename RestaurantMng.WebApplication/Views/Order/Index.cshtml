@@ -288,21 +288,23 @@
                 data: JSON.stringify(info),
                 success: function (result) {
                     if (result.Code == 1) {
-                        $.each(form_data, function (key, value) {
-                            // reload
-                            var newData = [
-                                value[0],
-                                value[1],
-                                value[2],
-                                value[3],
-                                value[4],
-                                value[5],
-                                value[6],
-                                '<button type="button" disabled style="margin-right:10px" class="btn btn-default editButton"><i class="fa fa-edit"></i></button>'
-                                + '<button type="button" disabled class="btn btn-default"><i class="fa fa-trash"></i></button>'
-                            ];
-                            table.row(key).data(newData).draw();
-                        });
+                        var id = $('#drChonBan').val();
+                        LayThongTinChiTietBan(id);
+                        //$.each(form_data, function (key, value) {
+                        //    // reload
+                        //    var newData = [
+                        //        value[0],
+                        //        value[1],
+                        //        value[2],
+                        //        value[3],
+                        //        value[4],
+                        //        value[5],
+                        //        value[6],
+                        //        '<button type="button" disabled style="margin-right:10px" class="btn btn-default editButton"><i class="fa fa-edit"></i></button>'
+                        //        + '<button type="button" disabled class="btn btn-default"><i class="fa fa-trash"></i></button>'
+                        //    ];
+                        //    table.row(key).data(newData).draw();
+                        //});
                     }
                     showalert(result.Message, 2);
                 },

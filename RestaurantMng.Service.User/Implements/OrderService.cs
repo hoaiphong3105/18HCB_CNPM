@@ -100,9 +100,9 @@ namespace RestaurantMng.Service.User.Implements
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ResultModel<List<NullModel>> Order(OrderReq model)
+        public ResultModel<List<Data.Models.OrderItem>> Order(OrderReq model)
         {
-            var result = new ResultModel<List<NullModel>>();
+            var result = new ResultModel<List<Data.Models.OrderItem>>();
             try
             {
                 var orderExist = _orderRepository.FindAll(x => x.TableId == model.tableId && x.Status == 1).FirstOrDefault();
@@ -139,6 +139,8 @@ namespace RestaurantMng.Service.User.Implements
                     _orderRepository.Update(orderExist);
                     _unitOfWork.Commit();
 
+                    // lấy ra dánh sách thêm mới
+                    result.Data = orderExist.OrderItems.Where(x => !itemUpdates.Any(y => y.orderItemId == x.OrderItemId)).ToList();
                 }
                 else // thêm mới
                 {
@@ -171,6 +173,7 @@ namespace RestaurantMng.Service.User.Implements
                     {
                         _orderRepository.Add(order);
                         _unitOfWork.Commit();
+                        result.Data = order.OrderItems.ToList();
                     }
                 }
             }
@@ -194,9 +197,9 @@ namespace RestaurantMng.Service.User.Implements
         /// Cập nhật trạng thái
         /// </summary>
         /// <returns></returns>
-        public ResultModel<List<NullModel>> UpdateStatus(int orderItemId, int status)
+        public ResultModel<List<string>> UpdateStatus(int orderItemId, int status)
         {
-            var result = new ResultModel<List<NullModel>>();
+            var result = new ResultModel<List<string>>();
             try
             {
                 var orderItem = _orderItemRepository.FindById(orderItemId);
@@ -204,6 +207,10 @@ namespace RestaurantMng.Service.User.Implements
 
                 _orderItemRepository.Update(orderItem);
                 _unitOfWork.Commit();
+                string menuName = _menuRepository.FindById(orderItem.MeniItemId).Name;
+                string tableName = _orderRepository.FindById(orderItem.OrderId).TableList.TableName;
+                string strStatus = status == 1 ? "đang xử lý" : status == 2 ? "hoàn thành" : "trễ";
+                result.Data = new List<string>() { ($"{tableName}: {menuName} {strStatus}") };
             }
             catch(Exception ex)
             {

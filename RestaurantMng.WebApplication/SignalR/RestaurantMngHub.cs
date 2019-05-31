@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNet.SignalR;
 using RestaurantMng.WebApplication.Authorization;
+using RestaurantMng.WebApplication.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,39 +20,53 @@ namespace RestaurantMng.WebApplication.SignalR
             Clients.All.addNewMessageToPage(name, message);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
         public void Send2(string message)
         {
             // Call the addNewMessageToPage method to update clients.
-            Clients.All.sendNoti( message);
+            Clients.All.sendNoti(message);
         }
 
-        public static void SendUser(string userId, object message)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public void Send3(List<NotificationOrder> orders)
         {
-            var clients = GlobalHost.ConnectionManager.GetHubContext<RestaurantMngHub>().Clients;
-            foreach (var connectionId in _connections.GetConnections(userId))
-            {
-                clients.Client(connectionId).sendNoti(message);
-            }
+            // Call the addNewMessageToPage method to update clients.
+            Clients.All.sendNoti(orders);
         }
 
-        public override Task OnConnected()
-        {
-            string name = "user1";
+        //public static void SendUser(string userId, object message)
+        //{
+        //    var clients = GlobalHost.ConnectionManager.GetHubContext<RestaurantMngHub>().Clients;
+        //    foreach (var connectionId in _connections.GetConnections(userId))
+        //    {
+        //        clients.Client(connectionId).sendNoti(message);
+        //    }
+        //}
 
-            _connections.Add(name, Context.ConnectionId);
+        //public override Task OnConnected()
+        //{
+        //    string name = "user1";
 
-            return base.OnConnected();
-        }
-        public override Task OnReconnected()
-        {
-            string name = "user1";
+        //    _connections.Add(name, Context.ConnectionId);
 
-            if (!_connections.GetConnections(name).Contains(Context.ConnectionId))
-            {
-                _connections.Add(name, Context.ConnectionId);
-            }
+        //    return base.OnConnected();
+        //}
+        //public override Task OnReconnected()
+        //{
+        //    string name = "user1";
 
-            return base.OnReconnected();
-        }
+        //    if (!_connections.GetConnections(name).Contains(Context.ConnectionId))
+        //    {
+        //        _connections.Add(name, Context.ConnectionId);
+        //    }
+
+        //    return base.OnReconnected();
+        //}
     }
 }

@@ -3,6 +3,7 @@ using RestaurantMng.Core.Common;
 using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.Service.User.Models.Request;
 using RestaurantMng.WebApplication.Authorization;
+using RestaurantMng.WebApplication.Models.ViewModels;
 using RestaurantMng.WebApplication.SignalR;
 using System;
 using System.Collections.Generic;
@@ -123,8 +124,23 @@ namespace RestaurantMng.WebApplication.Controllers
                 Code = info.Code,
                 Message =info.Message
             };
-            var hub = GlobalHost.ConnectionManager.GetHubContext<RestaurantMngHub>();
-            hub.Clients.All.Send2("Đã thêm");
+            if(info.Code == 1)
+            {
+                var lstNoti = new List<NotificationOrder>();
+                lstNoti.AddRange(info.Data.Select(x => new NotificationOrder()
+                {
+                    OrderItemId = x.OrderItemId,
+                    MenuId = x.MeniItemId,
+                    MenuName = x.Menu.Name,
+                    Note = x.Note,
+                    Quantity = x.Quantity,
+                    Status = x.Status,
+                }).ToList());
+
+                // real-time cập nhật danh sách món ăn cho đầu bếp
+                var hub = GlobalHost.ConnectionManager.GetHubContext<RestaurantMngHub>();
+                hub.Clients.All.Send3(lstNoti);
+            }
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
     }

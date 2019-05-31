@@ -7,7 +7,7 @@ namespace RestaurantMng.WebApplication.Authorization
 {
     public class AuthorizationAttribute : AuthorizeAttribute
     {
-        public string Role {set; get; }
+        public string Role { set; get; }
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
             var infoSession = (LoginDto)HttpContext.Current.Session[ConstCommon.USER_SESSION];
@@ -15,7 +15,8 @@ namespace RestaurantMng.WebApplication.Authorization
             {
                 return false;
             }
-            return (infoSession.Role == SystemRole.Admin || infoSession.Role == this.Role) ? true : false;
+            return (infoSession.Role == SystemRole.Quanly || infoSession.Role == SystemRole.Quanly
+                || infoSession.Role == this.Role) ? true : false;
         }
     }
 

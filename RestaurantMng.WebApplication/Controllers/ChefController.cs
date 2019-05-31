@@ -1,6 +1,8 @@
-﻿using RestaurantMng.Core.Common;
+﻿using Microsoft.AspNet.SignalR;
+using RestaurantMng.Core.Common;
 using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.WebApplication.Authorization;
+using RestaurantMng.WebApplication.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +71,12 @@ namespace RestaurantMng.WebApplication.Controllers
                 Code = orderItems.Code,
                 Message = orderItems.Message,
             };
+
+            if (orderItems.Code == 1)
+            {
+                var hub = GlobalHost.ConnectionManager.GetHubContext<RestaurantMngHub>();
+                hub.Clients.All.Send2($"{orderItems.Data[0]}");
+            }
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
     }

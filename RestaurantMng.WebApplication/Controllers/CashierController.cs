@@ -15,9 +15,12 @@ using System.Web;
 using System.Net.Http;
 using System.Net;
 using System.Net.Http.Headers;
+using RestaurantMng.Core.Common;
+using RestaurantMng.WebApplication.Authorization;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
+    [Authorization(Role=SystemRole.Thungan)]
     public class CashierController : Controller
     {
         private readonly ICashierService _iOrderService;

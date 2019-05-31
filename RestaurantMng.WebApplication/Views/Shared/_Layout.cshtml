@@ -30,7 +30,7 @@
             font-size: 13px;
             font-weight: normal;
         }
-        </style>
+    </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
     <div class="wrapper">
@@ -56,19 +56,13 @@
                         <li class="dropdown notifications-menu">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                 <i class="fa fa-bell-o"></i>
-                                <span class="label label-warning">10</span>
+                                <span class="label label-warning" id="totalNoti">0</span>
                             </a>
                             <ul class="dropdown-menu">
-                                <div id="notification">
-
-                                </div>
                                 <li>
                                     <!-- inner menu: contains the actual data -->
-                                    <ul class="menu">
+                                    <ul class="menu" id="notification">
                                         <li>
-                                            <a href="#">
-                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                            </a>
                                         </li>
                                     </ul>
                                 </li>
@@ -84,7 +78,7 @@
                                 <img src="~/Content/images/user.png" class="user-image" alt="User Image" />
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                 <span class="hidden-xs">
-                                   @* @RestaurantMng.WebApplication.Authorization.Helper.LoginUser().UserName*@
+                                    @RestaurantMng.WebApplication.Authorization.Helper.LoginUser().UserName
                                 </span>
                             </a>
                             <ul class="dropdown-menu">
@@ -92,7 +86,7 @@
                                 <li class="user-header">
                                     <img src="~/Content/images/user.png" class="img-circle" alt="User Image">
                                     <p>
-                                        @*@RestaurantMng.WebApplication.Authorization.Helper.LoginUser().UserName - @RestaurantMng.WebApplication.Authorization.Helper.LoginUser().Role*@
+                                        @RestaurantMng.WebApplication.Authorization.Helper.LoginUser().UserName - @RestaurantMng.WebApplication.Authorization.Helper.LoginUser().Role
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
@@ -115,19 +109,19 @@
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">MENU</li>
                     <!-- Optionally, you can add icons to the links -->
-                    @if (false == false) // Role = Manager
+                    @if (RestaurantMng.WebApplication.Authorization.Helper.LoginUser().Role == "Quan ly") // Role = Manager
                     {
                         @Html.Action("MenuManager", "Home")
                     }
-                    @if (false == false) // Role = Chef
+                    @if (RestaurantMng.WebApplication.Authorization.Helper.LoginUser().Role == "Dau bep") // Role = Chef
                     {
                         @Html.Action("MenuChef", "Home")
                     }
-                    @if (false == false) // Role = Employee
+                    @if (RestaurantMng.WebApplication.Authorization.Helper.LoginUser().Role == "Phuc vu") // Role = Employee
                     {
                         @Html.Action("MenuEmployee", "Home")
                     }
-                    @if (false == false) // Role = Cashier
+                    @if (RestaurantMng.WebApplication.Authorization.Helper.LoginUser().Role == "Thu ngan") // Role = Cashier
                     {
                         @Html.Action("MenuCashier", "Home")
                     }
@@ -160,7 +154,6 @@
     <script src="~/Content/plugins/jnoty/jnoty.js"></script>
     <script src="~/Content/js/common.js"></script>
     <!--SignalR-->
-
     <!--Script references. -->
     <!--The jQuery library is required and is referenced by default in _Layout.cshtml. -->
     @*<script src="~/Scripts/jquery-3.3.1.min.js"></script>*@
@@ -171,35 +164,34 @@
     <!--SignalR script to update the chat page and send messages.-->
     <script>
         $(function () {
-        // Reference the auto-generated proxy for the hub.
-        var chat = $.connection.restaurantMngHub;
-        // Create a function that the hub can call back to display messages.
+            // Reference the auto-generated proxy for the hub.
+            var chat = $.connection.restaurantMngHub;
+            // Create a function that the hub can call back to display messages.
             chat.client.Send2 = function (message) {
-            // Add the message to the page.
-            $('#notification').append('<li><strong>'
-                + htmlEncode(message)
-                    + '</strong></li>');
-                alert(message);
-            //var html = [
-            //    '<li>',
-            //    '<a href="#">',
-            //    '<i class="fa fa-users text-aqua"></i>',
-            //    'htmlEncode(message.content)',
-            //    '</a>',
-            //    '</li>'
-            //].join("\n");
-            //$('#notification').prepend(html);
-        }
-        // Start the connection.
-        $.connection.hub.start().done(function () {
-            console.log('aaaa');
+                // Add the message to the page.
+                var html = [
+                    '<li>',
+                    '<a href="#" class="clearitem" >',
+                    '<i class="fa fa-info text-aqua"></i>',
+                    htmlEncode(message),
+                    '</a>',
+                    '</li>'
+                ].join("\n");
+                $('#notification').prepend(html);
+                $('#totalNoti').text(parseInt($('#totalNoti').text()) + 1);
+            }
+            // Start the connection.
+            $.connection.hub.start().done(function () {
+                console.log('aaaa');
+            });
+
         });
-    });
-    // This optional function html-encodes messages for display in the page.
-    function htmlEncode(value) {
-        var encodedValue = $('<div />').text(value).html();
-        return encodedValue;
-    }
+        // This optional function html-encodes messages for display in the page.
+        function htmlEncode(value) {
+            var encodedValue = $('<div />').text(value).html();
+            return encodedValue;
+        }
+
     </script>
     @RenderSection("scripts", required: false)
 
