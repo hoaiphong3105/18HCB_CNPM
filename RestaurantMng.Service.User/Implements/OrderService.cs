@@ -215,5 +215,27 @@ namespace RestaurantMng.Service.User.Implements
 
             return result;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ResultModel<List<Data.Models.Order>> GetAll()
+        {
+            var result = new ResultModel<List<Data.Models.Order>>();
+            try
+            {
+                var data = _orderRepository.FindAll()
+                    .ToList();
+                result.Data = data;
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Thất bại";
+            }
+
+            return result;
+        }
     }
 }

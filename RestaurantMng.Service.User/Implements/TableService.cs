@@ -170,5 +170,31 @@ namespace RestaurantMng.Service.User.Implements
             }
             return result;
         }
+
+        public ResultModel<Data.Models.TableList> GetTable(int id)
+        {
+            var result = new ResultModel<Data.Models.TableList>();
+
+            try
+            {
+                var table = _tableRepository.FindById(id);
+
+                if (table == null)
+                {
+                    result.Code = -1;
+                    result.Message = "Bàn không tồn tại";
+                }
+                else
+                {
+                    result.Data = table;
+                }
+            }
+            catch (Exception ex)
+            {
+                result.Code = -2;
+                result.Message = "Table was existedi";
+            }
+            return result;
+        }
     }
 }
