@@ -221,13 +221,11 @@
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\RestaurantStatusController.cs" />
     <Compile Include="Controllers\ShiftWorkController.cs" />
-    <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModels\NotificationOrder.cs" />
-    <Compile Include="Models\ViewModels\OrderInfo.cs" />
     <Compile Include="Models\ViewModels\OrderInfoVM.cs" />
     <Compile Include="Models\ViewModels\ShiftWorkInfoVM.cs" />
     <Compile Include="Models\ViewModels\Summary.cs" />
