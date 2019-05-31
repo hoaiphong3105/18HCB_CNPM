@@ -28,13 +28,17 @@ namespace RestaurantMng.WebApplication.Controllers
             var unpayOrder = _iOrderService.GetAll().Data
                 .Where(x => x.PaymentStatus == 0).ToList();
             var countWaitingTable = 0;
-            foreach(var order in unpayOrder)
+
+            if (unpayOrder != null)
             {
-                var orderItem = _iOrderService.GetOrderItems().Data
-                    .Where(x => x.OrderId == order.OrderId && x.Status != 1).FirstOrDefault();
-                if(orderItem != null)
+                foreach (var order in unpayOrder)
                 {
-                    countWaitingTable++;
+                    var orderItem = _iOrderService.GetOrderItems().Data
+                        .Where(x => x.OrderId == order.OrderId && x.Status != 1).FirstOrDefault();
+                    if (orderItem != null)
+                    {
+                        countWaitingTable++;
+                    }
                 }
             }
             ViewBag.WaitingTable = countWaitingTable;
