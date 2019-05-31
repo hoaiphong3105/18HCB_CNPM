@@ -125,6 +125,10 @@ namespace RestaurantMng.WebApplication.Controllers
                 {
                     user.Password = currUser.Password;
                 }
+                else
+                {
+                    user.Password = Encryption.HashMD5(user.Password.Trim(), user.UserName.Trim());
+                }
                 currUser.UserName = user.UserName;
                 currUser.FullName = user.FullName;
                 currUser.Password = user.Password;

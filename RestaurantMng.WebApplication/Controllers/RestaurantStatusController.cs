@@ -26,7 +26,7 @@ namespace RestaurantMng.WebApplication.Controllers
         public ActionResult Index()
         {
             ViewBag.WaitingTable = _iOrderService.GetAll().Data
-                .Where(x => x.Status == 1 && x.PaymentStatus == 1).Count();
+                .Where(x => x.Status == 1 && (x.PaymentStatus == 1 || x.PaymentStatus == 3)).Count();
             var tableList = _iTableService.GetAllTable().Data.Where(x => x.Status == 0).ToList();
             var tableInfoList = new List<TableInfoVM>();
             if(tableList != null && tableList.Count > 0)
