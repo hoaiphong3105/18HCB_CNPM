@@ -1,0 +1,177 @@
+﻿@using RestaurantMng.WebApplication.Models.ViewModels;
+@model List<ShiftWorkInfoVM>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    Danh sách ca làm việc
+</div>
+
+<table class="table table-bordered" style="background-color:white;">
+    <tbody>
+        <tr>
+            <th>ID</th>
+            <th>Tên ca</th>
+            <th>Thời gian bắt đầu (h)</th>
+            <th>Thời gian kết thúc (h)</th>
+        </tr>
+        @foreach (var swInfo in Model)
+        {
+            <tr>
+                <td>@swInfo.ID</td>
+                <td>@swInfo.Name</td>
+                <td>@swInfo.Start</td>
+                <td>@swInfo.End</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    Thông tin chi tiết
+    <button id="newShiftWork" class="btn btn-block btn-success" style="width:auto;display:inline-block">+</button>
+</div>
+
+@foreach (var swInfo in Model)
+{
+    <div style="color:red">
+        @swInfo.Name
+    </div>
+    <div>
+        <span>Danh sách nhan viên</span>
+    </div>
+    <table class="table table-bordered" style="background-color:white;">
+        <tbody>
+            <tr>
+                <th>Tên nhân viên</th>
+                <th>Account</th>
+                <th>Action</th>
+            </tr>
+            @foreach (var employee in swInfo.Employees)
+            {
+                <tr>
+                    <td>@employee.FullName</td>
+                    <td>@employee.UserName</td>
+                    <td>
+                        <button type="button" class="btn btn-default deleteBtn"><i class="fa fa-trash" onclick="DeleteDetail(@employee.ID,@swInfo.ID);"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<div class="modal fade" id="modal-default" style="display: none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title">Default Modal</h4>
+            </div>
+            <div class="modal-body">
+                <form id="formMain" class="form-horizontal">
+                    <input type="hidden" id="shiftWorkDetailID">
+                    <input type="hidden" id="rowIndex">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Nhân viên</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="employeeID">
+                                    @Html.Action("PartialListUser", "ShiftWork")
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Ca</label>
+                            <div class="col-sm-10">
+                                <select class="form-control" id="shiftWorkID">
+                                    @Html.Action("PartialListShiftWork", "ShiftWork")
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.box-body -->
+                    <input id="submitChange" type="submit" class="btn btn-primary"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+
+
+@section scripts{
+    <script src="~/Scripts/dataTables.bootstrap.min.js"></script>
+    <script src="~/Scripts/datatable/jquery.dataTables.min.js"></script>
+    <script>
+        isAddedNew = false;
+        $('#newShiftWork').click(function () {
+            $('#modal-default').modal('show');
+            isAddedNew = true;
+        });
+
+        $('#submitChange').click(function () {
+            //insert
+            if (isAddedNew) {
+                var data = {
+                    shiftWorkID: parseInt($('#shiftWorkID').val(), 10),
+                    employeeID: parseInt($('#employeeID').val(), 10),
+                };
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("Insert", "ShiftWork")',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (rs) {
+                        if (rs.code >= 0) {
+                            alert("Them thanh cong!");
+                            isAddedNew = false;
+                            location.reload(); 
+                        } else {
+                            alert(rs.message);
+                        }
+                    },
+                    error: function () {
+                        alert("Error!");
+                    }
+                });
+            }
+        });
+
+        function DeleteDetail(employeeID, shiftWorkID) {
+            var data = {
+                employeeID: parseInt(employeeID),
+                shiftWorkID: parseInt(shiftWorkID)
+            }
+            if (confirm('Xac nhan se xoa nhan vien nay?')) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("DeleteDetail", "ShiftWork")',
+                    data: JSON.stringify(data),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (rs) {
+                        if (rs >= 0) {
+                            alert("Xoá thanh cong!");
+                            isAddedNew = false;
+                            location.reload();
+                        } else {
+                            alert("Xoá that bai!");
+                        }
+                    },
+                    error: function () {
+                        alert("Error!");
+                    }
+                });
+            }
+        }
+    </script>
+}

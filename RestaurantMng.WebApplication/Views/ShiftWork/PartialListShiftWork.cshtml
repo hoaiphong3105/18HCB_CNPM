@@ -1,0 +1,10 @@
+﻿@using RestaurantMng.Data.Models;
+@model List<ShiftWork>
+
+@foreach (var item in Model)
+{
+    <option value="@item.Id">@item.Name</option>
+}
+
+
+

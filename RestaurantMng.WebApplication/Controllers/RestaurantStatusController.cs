@@ -1,4 +1,6 @@
-﻿using RestaurantMng.Service.User.Interfaces;
+﻿using RestaurantMng.Core.Common;
+using RestaurantMng.Service.User.Interfaces;
+using RestaurantMng.WebApplication.Authorization;
 using RestaurantMng.WebApplication.Models.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -8,6 +10,8 @@ using System.Web.Mvc;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
+    [Authorization(Role = SystemRole.Quanly)]
+    [RoutePrefix("quan-ly")]
     public class RestaurantStatusController : Controller
     {
         private readonly ITableService _iTableService;
@@ -31,7 +35,7 @@ namespace RestaurantMng.WebApplication.Controllers
                 {
                     var orderItems = _iOrderService.GetOrderItems().Data
                         .Where(x => x.Order.TableId == table.TableId).ToList();
-                    var orderInfoList = new List<OrderInfo>();
+                    var orderInfoList = new List<OrderInfoVM>();
                     foreach(var orderItem in orderItems)
                     {
                         var menuItem = _iOrderService.GetAllMenu().Data
@@ -49,7 +53,7 @@ namespace RestaurantMng.WebApplication.Controllers
                         {
                             status = "Đã xong các món";
                         }
-                        var orderInfo = new OrderInfo
+                        var orderInfo = new OrderInfoVM
                         {
                             Name = menuItem.Name,
                             Quantity = orderItem.Quantity,
