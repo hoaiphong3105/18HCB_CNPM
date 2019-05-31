@@ -17,7 +17,7 @@ namespace RestaurantMng.Data.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ShiftWork()
         {
-            this.Users = new HashSet<User>();
+            this.ShiftWorkDetails = new HashSet<ShiftWorkDetail>();
         }
     
         public int Id { get; set; }
@@ -26,6 +26,6 @@ namespace RestaurantMng.Data.Models
         public Nullable<int> End { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<ShiftWorkDetail> ShiftWorkDetails { get; set; }
     }
 }

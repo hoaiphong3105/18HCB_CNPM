@@ -1,4 +1,5 @@
-﻿using RestaurantMng.Core.Common;
+﻿using Microsoft.AspNet.SignalR;
+using RestaurantMng.Core.Common;
 using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.Service.User.Models.Request;
 using RestaurantMng.WebApplication.Authorization;
@@ -124,7 +125,9 @@ namespace RestaurantMng.WebApplication.Controllers
                 Code = info.Code,
                 Message =info.Message
             };
-            RestaurantMngHub.SendUser(Helper.LoginUser().UserID.ToString(), new { id = "1", content = "đã thêm 1 hóa đơn" });
+            //RestaurantMngHub.SendUser(Helper.LoginUser().Role, new { id = "1", content = "đã thêm 1 hóa đơn" });
+            var hub = GlobalHost.ConnectionManager.GetHubContext<RestaurantMngHub>();
+            hub.Clients.All.Send2("Đã thêm");
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
     }

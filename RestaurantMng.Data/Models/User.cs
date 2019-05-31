@@ -18,6 +18,7 @@ namespace RestaurantMng.Data.Models
         public User()
         {
             this.Orders = new HashSet<Order>();
+            this.ShiftWorkDetails = new HashSet<ShiftWorkDetail>();
         }
     
         public int ID { get; set; }
@@ -30,11 +31,11 @@ namespace RestaurantMng.Data.Models
         public string Phone { get; set; }
         public Nullable<decimal> Salary { get; set; }
         public bool Status { get; set; }
-        public Nullable<int> ShiftWork { get; set; }
     
         public virtual GroupUser GroupUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
-        public virtual ShiftWork ShiftWork1 { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ShiftWorkDetail> ShiftWorkDetails { get; set; }
     }
 }
