@@ -1,0 +1,36 @@
+﻿@using RestaurantMng.WebApplication.Models.ViewModels;
+@model List<TableInfoVM>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    Số bàn đang chờ: @ViewBag.WaitingTable
+</div>
+@foreach (var tableInfo in Model)
+{
+    <div style="color:red">
+        @tableInfo.TableName
+    </div>
+    <div>
+        Danh sách món ăn
+    </div>
+    <table class="table table-bordered" style="background-color:white;">
+        <tbody>
+            <tr>
+                <th>Món ăn</th>
+                <th>Số lượng</th>
+                <th style="width: 40px">Tình trạng</th>
+            </tr>
+            @foreach (var orderInfo in tableInfo.OrderItems)
+            {
+                <tr>
+                    <td>@orderInfo.Name</td>
+                    <td>@orderInfo.Quantity</td>
+                    <td><span class="badge bg-info">@orderInfo.Status</span></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

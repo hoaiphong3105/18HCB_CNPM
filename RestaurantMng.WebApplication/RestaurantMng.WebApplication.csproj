@@ -219,14 +219,17 @@
     <Compile Include="Controllers\ManagerController.cs" />
     <Compile Include="Controllers\MUserController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
+    <Compile Include="Controllers\RestaurantStatusController.cs" />
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\OrderInfo.cs" />
     <Compile Include="Models\ViewModels\Summary.cs" />
     <Compile Include="Models\ViewModels\OrderItemDetailVM.cs" />
     <Compile Include="Models\ViewModels\OrderOrderItemVM.cs" />
+    <Compile Include="Models\ViewModels\TableInfoVM.cs" />
     <Compile Include="Models\ViewModels\TableVM.cs" />
     <Compile Include="Models\ViewModels\UserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -342,6 +345,7 @@
     <Content Include="Views\Chef\Index.cshtml" />
     <Content Include="Views\MUser\PartialListGroupUser.cshtml" />
     <Content Include="Views\Cashier\Spending.cshtml" />
+    <Content Include="Views\RestaurantStatus\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -38,5 +38,7 @@ namespace RestaurantMng.Service.User.Interfaces
         /// <param name="tableName"></param>
         /// <returns></returns>
         ResultModel<NullModel> CheckTableExist(string tableName);
+
+        ResultModel<Data.Models.TableList> GetTable(int id);
     }
 }

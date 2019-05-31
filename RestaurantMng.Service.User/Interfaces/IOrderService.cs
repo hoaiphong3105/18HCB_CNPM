@@ -43,5 +43,6 @@ namespace RestaurantMng.Service.User.Interfaces
         /// <param name="id"></param>
         /// <returns></returns>
         ResultModel<List<NullModel>> UpdateStatus(int orderItemId,int status);
+
     }
 }
