@@ -37,6 +37,7 @@
         //});
 
         $('#newEmployee').click(function () {
+            $("#Password").prop('required', true);
             $('#modal-default').modal('show');
             isAddedNew = true;
         });
@@ -51,16 +52,18 @@
         }
 
         $('#employeeTable tbody').on('click', '.updateBtn', function () {
-            updatedRow = $(this).closest("tr");
+            var idx = $(this).closest('tr').index();
+            var dataRow = table.rows(idx).data();
             isAddedNew = false;
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("GetUser", "MUser")',
-                data: JSON.stringify({ id: selectedRowID }),
+                data: JSON.stringify({ id: dataRow[0][0] }),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function (data) {
                     if (data) {
+                        $('#rowIndex').val(idx);
                         $('#ID').val(data.ID);
                         $('#UserName').val(data.UserName);
                         $('#FullName').val(data.FullName);
@@ -70,6 +73,7 @@
                         $('#DateOfBirth').val(data.DateOfBirth);
                         $('#Phone').val(data.Phone);
                         $('#Salary').val(data.Salary);
+                        $("#Password").prop('required', false);
                         $('#modal-default').modal('show');
                     }
                     else {
@@ -83,18 +87,20 @@
         });
 
         $('#employeeTable tbody').on('click', '.deleteBtn', function () {
-            var row = $(this).closest("tr");
+            var idx = $(this).closest('tr').index();
+            var dataRow = table.rows(idx).data();
             if (confirm('Xac nhan se xoa nhan vien nay?')) {
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("Delete", "MUser")',
-                    data: JSON.stringify({ id: selectedRowID }),
+                    data: JSON.stringify({ id: dataRow[0][0] }),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (rs) {
                         if (rs.code > 0) {
-                            table.row(row).remove().draw(false);
+                            table.row(idx).remove().draw(false);
                             alert("Xoá thanh cong!");
+                            $('#modal-default').modal('hide');
                         }
                         else {
                             alert(rs.message);
@@ -108,6 +114,9 @@
         });
 
         $('#submitChange').click(function () {
+            if (!$("#formMain").checkValidity()) { 
+                return;
+            }
             //insert
             if (isAddedNew) {
                 var employee = {
@@ -131,12 +140,15 @@
                         if (rs.code >= 0) {
                             alert("Them thanh cong!");
                             var newData = [
-                                rs.User.FullName, rs.User.UserName, rs.User.Address,
-                                rs.User.DateOfBirth, rs.User.Phone, rs.User.Salary, rs.User.ID
+                                rs.User.ID, rs.User.FullName, rs.User.UserName, rs.User.Address,
+                                rs.User.DateOfBirth, rs.User.Phone, rs.User.Salary,
+                                '<button type="button" class="btn btn-default editButton"><i class="fa fa-edit"></i></button>' +
+                                '<button type="button" class="btn btn-default editButton"><i class="fa fa-trash"></i></button>'
                             ];
                             table.row.add(newData).draw(false);
                             $("#formMain")[0].reset();
                             isAddedNew = false;
+                            $('#modal-default').modal('hide');
                         } else {
                             alert(rs.message);
                         }
@@ -160,6 +172,7 @@
                     Salary: $('#Salary').val(),
                     Status: true,
                 };
+                var idx = $('#rowIndex').val();
                 $.ajax({
                     type: "POST",
                     url: '@Url.Action("Update", "MUser")',
@@ -170,10 +183,13 @@
                         if (rs.code >= 0) {
                             alert(rs.message);
                             var newData = [
-                                rs.User.FullName, rs.User.UserName, rs.User.Address,
-                                rs.User.DateOfBirth, rs.User.Phone, data.Salary, rs.User.ID
+                                rs.User.ID,rs.User.FullName, rs.User.UserName, rs.User.Address,
+                                rs.User.DateOfBirth, rs.User.Phone, rs.User.Salary,
+                                '<button type="button" class="btn btn-default editButton"><i class="fa fa-edit"></i></button>' +
+                                '<button type="button" class="btn btn-default editButton"><i class="fa fa-trash"></i></button>'
                             ]
-                            table.row(updatedRow).data(newData).draw();
+                            table.row(idx).data(newData).draw();
+                            $('#modal-default').modal('hide');
                         } else {
                             alert("Cap nhat that bai!");
                         }
@@ -202,6 +218,7 @@
         <table id="employeeTable" class="table table-bordered table-hover dataTable">
             <thead>
                 <tr>
+                    <th>ID</th>
                     <th>Họ và tên</th>
                     <th>Account</th>
                     <th>Địa chỉ</th>
@@ -215,19 +232,16 @@
                 @foreach (var p in Model)
                 {
                     <tr>
+                        <th>@p.ID</th>
                         <th>@p.FullName</th>
                         <th>@p.UserName</th>
                         <th>@p.Address</th>
                         <th>@p.DateOfBirth</th>
                         <th>@p.Phone</th>
                         <th>@p.Salary</th>
-                        <th class="dt-center">
-                            <a class="updateBtn" href="#" onclick="update(@p.ID)">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                            <a class="deleteBtn" href="#" onclick="deleteUser(@p.ID)">
-                                <i class="fa fa-trash"></i>
-                            </a>
+                        <th>
+                            <button type="button" class="btn btn-default updateBtn"><i class="fa fa-edit"></i></button>
+                            <button type="button" class="btn btn-default deleteBtn"><i class="fa fa-trash"></i></button>
                         </th>
                     </tr>
                 }
@@ -250,17 +264,18 @@
             <div class="modal-body">
                 <form id="formMain" class="form-horizontal">
                     <input type="hidden" id="ID">
+                    <input type="hidden" id="rowIndex">
                     <div class="box-body">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Account</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="UserName">
+                                <input type="text" class="form-control" id="UserName" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Họ tên</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="FullName">
+                                <input type="text" class="form-control" id="FullName" required>
                             </div>
                         </div>
                         <div class="form-group">
@@ -286,27 +301,27 @@
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Ngày sinh</label>
                             <div class="col-sm-10">
-                                <input type="date" class="form-control" id="DateOfBirth">
+                                <input type="date" class="form-control" id="DateOfBirth" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Số điện thoại</label>
                             <div class="col-sm-10">
-                                <input type="text" class="form-control" id="Phone">
+                                <input type="text" class="form-control" id="Phone" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Lương</label>
                             <div class="col-sm-10">
-                                <input type="number" class="form-control" id="Salary">
+                                <input type="number" class="form-control" id="Salary" required>
                             </div>
                         </div>
                     </div>
                     <!-- /.box-body -->
+                    <input id="submitChange" type="submit" class="btn btn-primary" />
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="submitChange" type="button" class="btn btn-primary">Submit</button>
             </div>
         </div>
         <!-- /.modal-content -->

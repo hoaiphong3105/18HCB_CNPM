@@ -2,6 +2,7 @@
 using RestaurantMng.Data.Models;
 using RestaurantMng.Service.User.Interfaces;
 using RestaurantMng.Service.User.Models.Dtos;
+using RestaurantMng.WebApplication.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ using System.Web.Mvc;
 
 namespace RestaurantMng.WebApplication.Controllers
 {
+    [Authorization(Role = SystemRole.Quanly)]
+    [RoutePrefix("quan-ly")]
     public class MUserController : Controller
     {
         private readonly IUserService _iUserService;
@@ -75,7 +78,16 @@ namespace RestaurantMng.WebApplication.Controllers
             }
             var data = new
             {
-                User = user,
+                User = new
+                {
+                    ID = user.ID,
+                    UserName = user.UserName,
+                    FullName = user.FullName,
+                    Address = user.Address,
+                    DateOfBirth = user.DateOfBirth,
+                    Phone = user.Phone,
+                    Salary = user.Salary,
+                },
                 code = result.Code,
                 message = result.Message,
             };
@@ -127,7 +139,16 @@ namespace RestaurantMng.WebApplication.Controllers
 
             var data = new
             {
-                User = currUser,
+                User = new
+                {
+                    ID = currUser.ID,
+                    UserName = currUser.UserName,
+                    FullName = currUser.FullName,
+                    Address = currUser.Address,
+                    DateOfBirth = currUser.DateOfBirth,
+                    Phone = currUser.Phone,
+                    Salary = currUser.Salary,
+                },
                 code = result.Code,
                 message = result.Message,
             };
