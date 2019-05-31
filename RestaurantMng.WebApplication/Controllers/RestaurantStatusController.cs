@@ -25,8 +25,20 @@ namespace RestaurantMng.WebApplication.Controllers
         // GET: RestaurantStatus
         public ActionResult Index()
         {
-            ViewBag.WaitingTable = _iOrderService.GetAll().Data
-                .Where(x => x.Status == 1 && (x.PaymentStatus == 1 || x.PaymentStatus == 3)).Count();
+            var unpayOrder = _iOrderService.GetAll().Data
+                .Where(x => x.PaymentStatus == 0).ToList();
+            var countWaitingTable = 0;
+            foreach(var order in unpayOrder)
+            {
+                var orderItem = _iOrderService.GetOrderItems().Data
+                    .Where(x => x.OrderId == order.OrderId && x.Status != 1).FirstOrDefault();
+                if(orderItem != null)
+                {
+                    countWaitingTable++;
+                }
+            }
+            ViewBag.WaitingTable = countWaitingTable;
+
             var tableList = _iTableService.GetAllTable().Data.Where(x => x.Status == 0).ToList();
             var tableInfoList = new List<TableInfoVM>();
             if(tableList != null && tableList.Count > 0)
