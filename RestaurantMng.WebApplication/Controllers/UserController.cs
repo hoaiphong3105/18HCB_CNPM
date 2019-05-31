@@ -55,19 +55,7 @@ namespace RestaurantMng.WebApplication.Controllers
             if (result.Code == 1)
             {
                 Session.Add(ConstCommon.USER_SESSION, (LoginDto)result.Data);
-
-                // set cookie
-                HttpCookie ck = System.Web.HttpContext.Current.Request.Cookies["USER_ID"];
-                if (ck == null)
-                {
-                    ck = new HttpCookie("USER_ID");
-                    ck.Values.Add("ID", ((LoginDto)result.Data).UserID.ToString());
-                }
-                else
-                {
-                    ck.Values.Set("ID", ((LoginDto)result.Data).UserID.ToString());
-                }
-                return View("Index");
+                return RedirectToAction("Index", "Home");
             }
             else
             {
@@ -113,8 +101,8 @@ namespace RestaurantMng.WebApplication.Controllers
             // test
             model = new UserViewModel();
             model.FullName = "Triệu Mẫn2";
-            model.UserName = "thungan1";
-            model.GroupID = 4;
+            model.UserName = "phucvu2";
+            model.GroupID = 5;
             // end test
 
             var user = new Data.Models.User();

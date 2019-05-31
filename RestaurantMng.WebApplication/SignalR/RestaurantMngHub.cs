@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNet.SignalR;
+using RestaurantMng.WebApplication.Authorization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace RestaurantMng.WebApplication.SignalR
         public void Send2(string message)
         {
             // Call the addNewMessageToPage method to update clients.
-            //Clients.All.sendNoti( message);
+            Clients.All.sendNoti( message);
         }
 
         public static void SendUser(string userId, object message)
@@ -35,7 +36,7 @@ namespace RestaurantMng.WebApplication.SignalR
 
         public override Task OnConnected()
         {
-            string name = Authorization.Helper.GetUserID();
+            string name = "user1";
 
             _connections.Add(name, Context.ConnectionId);
 
@@ -43,7 +44,7 @@ namespace RestaurantMng.WebApplication.SignalR
         }
         public override Task OnReconnected()
         {
-            string name = Authorization.Helper.GetUserID();
+            string name = "user1";
 
             if (!_connections.GetConnections(name).Contains(Context.ConnectionId))
             {

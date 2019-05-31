@@ -36,5 +36,7 @@ namespace RestaurantMng.Data.Models
         public virtual DbSet<SpendingMoney> SpendingMoneys { get; set; }
         public virtual DbSet<TableList> TableLists { get; set; }
         public virtual DbSet<ShiftWork> ShiftWorks { get; set; }
+        public virtual DbSet<ShiftWorkDetail> ShiftWorkDetails { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
     }
 }

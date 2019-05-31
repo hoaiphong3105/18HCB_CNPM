@@ -26,15 +26,5 @@ namespace RestaurantMng.WebApplication.Authorization
             var infoSession = (LoginDto)HttpContext.Current.Session[ConstCommon.USER_SESSION];
             return infoSession;
         }
-
-        public static string GetUserID()
-        {
-            if (HttpContext.Current.Request == null
-                || HttpContext.Current.Request.Cookies["USER_ID"] == null)
-                return "";
-
-            HttpCookie myCookie = HttpContext.Current.Request.Cookies["USER_ID"];
-            return HttpContext.Current.Server.HtmlEncode(myCookie.Values["ID"]);
-        }
     }
 }

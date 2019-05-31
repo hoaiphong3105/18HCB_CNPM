@@ -90,6 +90,14 @@
           <Property Name="Start" Type="int" />
           <Property Name="End" Type="int" />
         </EntityType>
+        <EntityType Name="ShiftWorkDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ShiftWorkID" Type="int" />
+          <Property Name="EmployeeID" Type="int" />
+        </EntityType>
         <EntityType Name="SpendingMoney">
           <Key>
             <PropertyRef Name="Id" />
@@ -99,6 +107,16 @@
           <Property Name="TotalPrice" Type="money" Nullable="false" />
           <Property Name="Reason" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="TableList">
           <Key>
@@ -121,7 +139,6 @@
           <Property Name="Phone" Type="varchar" MaxLength="20" />
           <Property Name="GroupID" Type="int" />
           <Property Name="Salary" Type="money" />
-          <Property Name="ShiftWork" Type="int" />
           <Property Name="Status" Type="bit" Nullable="false" />
         </EntityType>
         <Association Name="FK_Material_FoodResource">
@@ -208,6 +225,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ShiftWorkDetail_ShiftWork">
+          <End Role="ShiftWork" Type="Self.ShiftWork" Multiplicity="0..1" />
+          <End Role="ShiftWorkDetail" Type="Self.ShiftWorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ShiftWork">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ShiftWorkDetail">
+              <PropertyRef Name="ShiftWorkID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShiftWorkDetail_User">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="ShiftWorkDetail" Type="Self.ShiftWorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ShiftWorkDetail">
+              <PropertyRef Name="EmployeeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_User_GroupUser">
           <End Role="GroupUser" Type="Self.GroupUser" Multiplicity="0..1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
@@ -220,18 +261,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_User_ShiftWork">
-          <End Role="ShiftWork" Type="Self.ShiftWork" Multiplicity="0..1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ShiftWork">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="ShiftWork" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="RestaurantManagementModelStoreContainer">
           <EntitySet Name="FoodResource" EntityType="Self.FoodResource" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GroupUser" EntityType="Self.GroupUser" Schema="dbo" store:Type="Tables" />
@@ -241,7 +270,9 @@
           <EntitySet Name="Order" EntityType="Self.Order" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OrderItem" EntityType="Self.OrderItem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShiftWork" EntityType="Self.ShiftWork" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ShiftWorkDetail" EntityType="Self.ShiftWorkDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SpendingMoney" EntityType="Self.SpendingMoney" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TableList" EntityType="Self.TableList" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Material_FoodResource" Association="Self.FK_Material_FoodResource">
@@ -272,12 +303,16 @@
             <End Role="Order" EntitySet="Order" />
             <End Role="OrderItem" EntitySet="OrderItem" />
           </AssociationSet>
+          <AssociationSet Name="FK_ShiftWorkDetail_ShiftWork" Association="Self.FK_ShiftWorkDetail_ShiftWork">
+            <End Role="ShiftWork" EntitySet="ShiftWork" />
+            <End Role="ShiftWorkDetail" EntitySet="ShiftWorkDetail" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShiftWorkDetail_User" Association="Self.FK_ShiftWorkDetail_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="ShiftWorkDetail" EntitySet="ShiftWorkDetail" />
+          </AssociationSet>
           <AssociationSet Name="FK_User_GroupUser" Association="Self.FK_User_GroupUser">
             <End Role="GroupUser" EntitySet="GroupUser" />
-            <End Role="User" EntitySet="User" />
-          </AssociationSet>
-          <AssociationSet Name="FK_User_ShiftWork" Association="Self.FK_User_ShiftWork">
-            <End Role="ShiftWork" EntitySet="ShiftWork" />
             <End Role="User" EntitySet="User" />
           </AssociationSet>
         </EntityContainer>
@@ -311,8 +346,7 @@
           <Property Name="Salary" Type="Decimal" Precision="19" Scale="4" />
           <Property Name="Status" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Orders" Relationship="RestaurantManagementModel.FK_Order_User" FromRole="User" ToRole="Order" />
-          <Property Name="ShiftWork" Type="Int32" />
-          <NavigationProperty Name="ShiftWork1" Relationship="RestaurantManagementModel.FK_User_ShiftWork" FromRole="User" ToRole="ShiftWork" />
+          <NavigationProperty Name="ShiftWorkDetails" Relationship="RestaurantManagementModel.FK_ShiftWorkDetail_User" FromRole="User" ToRole="ShiftWorkDetail" />
         </EntityType>
         <EntityContainer Name="RestaurantManagementEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="GroupUsers" EntityType="Self.GroupUser" />
@@ -358,9 +392,15 @@
             <End Role="OrderItem" EntitySet="OrderItems" />
           </AssociationSet>
           <EntitySet Name="ShiftWorks" EntityType="RestaurantManagementModel.ShiftWork" />
-          <AssociationSet Name="FK_User_ShiftWork" Association="RestaurantManagementModel.FK_User_ShiftWork">
+          <EntitySet Name="ShiftWorkDetails" EntityType="RestaurantManagementModel.ShiftWorkDetail" />
+          <EntitySet Name="sysdiagrams" EntityType="RestaurantManagementModel.sysdiagram" />
+          <AssociationSet Name="FK_ShiftWorkDetail_ShiftWork" Association="RestaurantManagementModel.FK_ShiftWorkDetail_ShiftWork">
             <End Role="ShiftWork" EntitySet="ShiftWorks" />
+            <End Role="ShiftWorkDetail" EntitySet="ShiftWorkDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ShiftWorkDetail_User" Association="RestaurantManagementModel.FK_ShiftWorkDetail_User">
             <End Role="User" EntitySet="Users" />
+            <End Role="ShiftWorkDetail" EntitySet="ShiftWorkDetails" />
           </AssociationSet>
         </EntityContainer>
         <Association Name="FK_User_GroupUser">
@@ -565,17 +605,49 @@
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Start" Type="Int32" />
           <Property Name="End" Type="Int32" />
-          <NavigationProperty Name="Users" Relationship="RestaurantManagementModel.FK_User_ShiftWork" FromRole="ShiftWork" ToRole="User" />
+          <NavigationProperty Name="ShiftWorkDetails" Relationship="RestaurantManagementModel.FK_ShiftWorkDetail_ShiftWork" FromRole="ShiftWork" ToRole="ShiftWorkDetail" />
         </EntityType>
-        <Association Name="FK_User_ShiftWork">
+        <EntityType Name="ShiftWorkDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ShiftWorkID" Type="Int32" />
+          <Property Name="EmployeeID" Type="Int32" />
+          <NavigationProperty Name="ShiftWork" Relationship="RestaurantManagementModel.FK_ShiftWorkDetail_ShiftWork" FromRole="ShiftWorkDetail" ToRole="ShiftWork" />
+          <NavigationProperty Name="User" Relationship="RestaurantManagementModel.FK_ShiftWorkDetail_User" FromRole="ShiftWorkDetail" ToRole="User" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_ShiftWorkDetail_ShiftWork">
           <End Type="RestaurantManagementModel.ShiftWork" Role="ShiftWork" Multiplicity="0..1" />
-          <End Type="RestaurantManagementModel.User" Role="User" Multiplicity="*" />
+          <End Type="RestaurantManagementModel.ShiftWorkDetail" Role="ShiftWorkDetail" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ShiftWork">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="User">
-              <PropertyRef Name="ShiftWork" />
+            <Dependent Role="ShiftWorkDetail">
+              <PropertyRef Name="ShiftWorkID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ShiftWorkDetail_User">
+          <End Type="RestaurantManagementModel.User" Role="User" Multiplicity="0..1" />
+          <End Type="RestaurantManagementModel.ShiftWorkDetail" Role="ShiftWorkDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ShiftWorkDetail">
+              <PropertyRef Name="EmployeeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -598,7 +670,6 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="RestaurantManagementModel.User">
               <MappingFragment StoreEntitySet="User">
-                <ScalarProperty Name="ShiftWork" ColumnName="ShiftWork" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Salary" ColumnName="Salary" />
                 <ScalarProperty Name="Phone" ColumnName="Phone" />
@@ -711,6 +782,26 @@
                 <ScalarProperty Name="Start" ColumnName="Start" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShiftWorkDetails">
+            <EntityTypeMapping TypeName="RestaurantManagementModel.ShiftWorkDetail">
+              <MappingFragment StoreEntitySet="ShiftWorkDetail">
+                <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+                <ScalarProperty Name="ShiftWorkID" ColumnName="ShiftWorkID" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="RestaurantManagementModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
