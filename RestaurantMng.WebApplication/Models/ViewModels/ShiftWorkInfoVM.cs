@@ -6,10 +6,12 @@ using System.Web;
 
 namespace RestaurantMng.WebApplication.Models.ViewModels
 {
-    public class TableInfoVM
+    public class ShiftWorkInfoVM
     {
         public int ID;
-        public string TableName;
-        public List<OrderInfoVM> OrderItems;
+        public string Name;
+        public int Start;
+        public int End;
+        public List<User> Employees;
     }
 }

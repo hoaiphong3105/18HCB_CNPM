@@ -1,0 +1,9 @@
+﻿@using RestaurantMng.Data.Models;
+@model List<User>
+
+@foreach (var item in Model)
+{
+    <option value="@item.ID">@item.FullName</option>
+}
+
+

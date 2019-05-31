@@ -5,7 +5,7 @@ using System.Web;
 
 namespace RestaurantMng.WebApplication.Models.ViewModels
 {
-    public class OrderInfo
+    public class OrderInfoVM
     {
         public string Name;
         public int Quantity;
